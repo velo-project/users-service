@@ -2,13 +2,14 @@ package com.github.veloproject.userservices.core.entities;
 
 import lombok.*;
 
-
 @Getter
 @Setter
 @Builder
-public class User {
+@AllArgsConstructor
+public class UserEntity {
+    private Long userId;
     private String fullName;
     private String preferredName;
     private String email;
-    private HashPassword hashPassword;
+    private String password;
 }
