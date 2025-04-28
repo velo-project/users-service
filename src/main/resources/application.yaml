@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: UserServices
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/user_services
+    username: postgres
+    password: root
+
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
