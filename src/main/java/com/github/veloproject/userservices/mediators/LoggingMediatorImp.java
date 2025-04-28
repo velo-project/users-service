@@ -5,7 +5,6 @@ import com.github.veloproject.userservices.mediators.contracts.Request;
 import com.github.veloproject.userservices.mediators.contracts.RequestHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
