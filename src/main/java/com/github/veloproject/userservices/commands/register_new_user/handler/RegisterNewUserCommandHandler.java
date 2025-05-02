@@ -23,6 +23,10 @@ public class RegisterNewUserCommandHandler implements RequestHandler<RegisterNew
         );
 
         var user = repository.save(userEntity);
-        return RegisterNewUserCommandResult.builder().createdUserId(user.getId()).build();
+
+        return new RegisterNewUserCommandResult(
+                200,
+                "Successfully registered.",
+                user.getId());
     }
 }
