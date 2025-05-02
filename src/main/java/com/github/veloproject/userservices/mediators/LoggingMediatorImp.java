@@ -3,6 +3,7 @@ package com.github.veloproject.userservices.mediators;
 import com.github.veloproject.userservices.mediators.contracts.Mediator;
 import com.github.veloproject.userservices.mediators.contracts.Request;
 import com.github.veloproject.userservices.mediators.contracts.RequestHandler;
+import com.github.veloproject.userservices.mediators.contracts.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
@@ -18,7 +19,7 @@ public class LoggingMediatorImp implements Mediator {
     }
 
     @Override
-    public <TResponse> TResponse send(Request<TResponse> request) {
+    public <TResponse extends Response> TResponse send(Request<TResponse> request) {
         var className = request.getClass().getSimpleName();
         log.info("Request received: {}", className);
 
