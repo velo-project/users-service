@@ -20,6 +20,9 @@ public class RegisterNewUserController {
 
     @PostMapping("/register")
     public ResponseEntity<RegisterNewUserCommandResult> registerNewUser(@RequestBody RegisterNewUserCommand command) {
-        return ResponseEntity.ok(mediator.send(command));
+        var response = mediator.send(command);
+        return ResponseEntity
+                .status(response.getStatus())
+                .body(response);
     }
 }
