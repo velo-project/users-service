@@ -6,6 +6,8 @@ import com.github.veloproject.userservices.mediators.contracts.RequestHandler;
 import com.github.veloproject.userservices.persistence.entities.UserEntity;
 import com.github.veloproject.userservices.persistence.repositories.UserRepository;
 import com.github.veloproject.userservices.shared.exceptions.AlreadyExistsException;
+import com.github.veloproject.userservices.shared.exceptions.InvalidParameterException;
+import com.github.veloproject.userservices.shared.utils.CryptographyUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,22 +20,35 @@ public class RegisterNewUserCommandHandler implements RequestHandler<RegisterNew
 
     @Override
     public RegisterNewUserCommandResult handle(RegisterNewUserCommand command) {
-        if (repository.existsByEmail(command.getEmail())) {
+        var emailIsValid = !repository.existsByEmail(command.getEmail());
+        if (!emailIsValid) {
             throw new AlreadyExistsException("email");
         }
+
+        var nameIsValid = (command.getName() != null
+                && command.getName().trim().split("\\s+").length >= 2);
+        var passwordIsValid = (command.getPassword() != null
+                && command.getPassword().length() >= 8
+                && command.getPassword().length() <= 20);
+        if (!nameIsValid || !passwordIsValid) {
+            throw new InvalidParameterException("password");
+        }
+
+        var hashedPassword = CryptographyUtils
+                .encrypt(command.getPassword());
 
         UserEntity userEntity = new UserEntity(
                 command.getName(),
                 command.getEmail(),
-                command.getPassword()
+                hashedPassword
         );
         userEntity.setIsBlocked(false);
 
-        var user = repository.save(userEntity);
+        var userSaved = repository.save(userEntity);
 
         return new RegisterNewUserCommandResult(
                 200,
                 "Successfully registered.",
-                user.getId());
+                userSaved.getId());
     }
 }
