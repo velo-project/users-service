@@ -5,6 +5,7 @@ import com.github.veloproject.userservices.commands.register_new_user.RegisterNe
 import com.github.veloproject.userservices.mediators.contracts.RequestHandler;
 import com.github.veloproject.userservices.persistence.entities.UserEntity;
 import com.github.veloproject.userservices.persistence.repositories.UserRepository;
+import com.github.veloproject.userservices.shared.exceptions.AlreadyExistsException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,12 +16,18 @@ public class RegisterNewUserCommandHandler implements RequestHandler<RegisterNew
         this.repository = repository;
     }
 
+    @Override
     public RegisterNewUserCommandResult handle(RegisterNewUserCommand command) {
+        if (repository.existsByEmail(command.getEmail())) {
+            throw new AlreadyExistsException("email");
+        }
+
         UserEntity userEntity = new UserEntity(
                 command.getName(),
                 command.getEmail(),
                 command.getPassword()
         );
+        userEntity.setIsBlocked(false);
 
         var user = repository.save(userEntity);
 
