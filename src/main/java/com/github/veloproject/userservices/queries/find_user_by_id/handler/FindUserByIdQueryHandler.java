@@ -22,7 +22,7 @@ public class FindUserByIdQueryHandler implements RequestHandler<FindUserByIdQuer
             throw new NotFoundException("user");
         }
 
-        foundUser.get().setPassword(null);
+        foundUser.get().setPassword("*");
 
         return new FindUserByIdQueryResult
                 (200, "User has successfully found.", foundUser.get());
