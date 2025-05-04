@@ -27,12 +27,12 @@ public class RegisterNewUserCommandHandler implements RequestHandler<RegisterNew
 
         var nameIsValid = (command.getName() != null
                 && command.getName().trim().split("\\s+").length >= 2);
+        if (!nameIsValid) throw new InvalidParameterException("name");
+
         var passwordIsValid = (command.getPassword() != null
                 && command.getPassword().length() >= 8
                 && command.getPassword().length() <= 20);
-        if (!nameIsValid || !passwordIsValid) {
-            throw new InvalidParameterException("password");
-        }
+        if (!passwordIsValid) throw new InvalidParameterException("password");
 
         var hashedPassword = CryptographyUtils
                 .encrypt(command.getPassword());
