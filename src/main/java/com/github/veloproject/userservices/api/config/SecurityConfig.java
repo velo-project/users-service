@@ -34,11 +34,21 @@ public class SecurityConfig {
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/api/user_services/login", "/api/user_services/register").permitAll()
-                        .anyRequest().authenticated())
-                .csrf(csrf -> csrf.disable())
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/user_services/login",
+                                "/api/user_services/register")
+                        .permitAll()
+                    .anyRequest().authenticated())
+                .csrf(csrf -> csrf
+                        .disable()) // disable in prod
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(Customizer.withDefaults()))
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }
 
@@ -56,7 +66,6 @@ public class SecurityConfig {
                 .privateKey(this.privateKey)
                 .build();
         var jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
-
         return new NimbusJwtEncoder(jwks);
     }
 }
