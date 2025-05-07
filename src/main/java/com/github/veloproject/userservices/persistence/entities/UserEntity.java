@@ -1,5 +1,6 @@
 package com.github.veloproject.userservices.persistence.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -23,6 +24,7 @@ public class UserEntity {
     @Column(name = "email_user")
     private String email;
 
+    @JsonIgnore
     @Column(name = "password_user")
     private String password;
 
