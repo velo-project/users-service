@@ -1,9 +1,3 @@
-jwt:
-  public:
-    key: classpath:app.pub
-  private:
-    key: classpath:app.key
-
 spring:
   application:
     name: UserServices
@@ -14,3 +8,9 @@ spring:
     password: root
 
     driver-class-name: org.postgresql.Driver
+
+jwt:
+  public:
+    key: classpath:app.pub
+  private:
+    key: classpath:app.key
