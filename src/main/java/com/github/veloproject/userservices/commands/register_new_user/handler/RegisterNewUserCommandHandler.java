@@ -5,7 +5,6 @@ import com.github.veloproject.userservices.commands.register_new_user.RegisterNe
 import com.github.veloproject.userservices.mediators.contracts.RequestHandler;
 import com.github.veloproject.userservices.persistence.entities.UserEntity;
 import com.github.veloproject.userservices.persistence.repositories.UserRepository;
-import com.github.veloproject.userservices.shared.exceptions.AlreadyExistsException;
 import com.github.veloproject.userservices.shared.exceptions.InvalidParameterException;
 import com.github.veloproject.userservices.shared.utils.CryptographyUtils;
 import org.springframework.stereotype.Service;
@@ -20,19 +19,9 @@ public class RegisterNewUserCommandHandler implements RequestHandler<RegisterNew
 
     @Override
     public RegisterNewUserCommandResult handle(RegisterNewUserCommand command) {
-        var emailIsValid = !repository.existsByEmail(command.getEmail().trim());
-        if (!emailIsValid) {
-            throw new AlreadyExistsException("email");
-        }
-
-        var nameIsValid = (command.getName() != null
-                && command.getName().trim().split("\\s+").length >= 2);
-        if (!nameIsValid) throw new InvalidParameterException("name");
-
-        var passwordIsValid = (command.getPassword() != null
-                && command.getPassword().length() >= 8
-                && command.getPassword().length() <= 20);
-        if (!passwordIsValid) throw new InvalidParameterException("password");
+        validateEmail(command.getEmail());
+        validateName(command.getName());
+        validatePassword(command.getPassword());
 
         var hashedPassword = CryptographyUtils
                 .encrypt(command.getPassword());
@@ -44,11 +33,35 @@ public class RegisterNewUserCommandHandler implements RequestHandler<RegisterNew
         );
         userEntity.setIsBlocked(false);
 
-        var userSaved = repository.save(userEntity);
+        var savedUser = repository.save(userEntity);
 
         return new RegisterNewUserCommandResult(
                 200,
                 "Successfully registered.",
-                userSaved.getId());
+                savedUser.getId());
+    }
+
+    private void validateEmail(String email) throws InvalidParameterException {
+        if (repository.existsByEmail(email)
+                || email.contains(" ")
+                || !email.contains("@"))
+            throw new InvalidParameterException("email");
+    }
+
+    private void validateName(String name) throws InvalidParameterException {
+        if (name == null)
+            throw new InvalidParameterException("name");
+        int nameWordsLength = name.trim().split("\\s+").length;
+
+        if (nameWordsLength < 2 || name.length() > 100)
+            throw new InvalidParameterException("name");
+    }
+
+    private void validatePassword(String password) throws InvalidParameterException {
+        if (password == null
+                || password.length() < 8
+                || password.length() > 20
+                || password.contains(" "))
+            throw new InvalidParameterException("password");
     }
 }
