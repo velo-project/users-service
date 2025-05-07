@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public abstract class Response {
+public class Response {
     private Integer status;
     private String message;
     @Setter(AccessLevel.PRIVATE)
