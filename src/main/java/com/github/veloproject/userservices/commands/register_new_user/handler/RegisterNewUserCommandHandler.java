@@ -20,7 +20,7 @@ public class RegisterNewUserCommandHandler implements RequestHandler<RegisterNew
 
     @Override
     public RegisterNewUserCommandResult handle(RegisterNewUserCommand command) {
-        var emailIsValid = !repository.existsByEmail(command.getEmail());
+        var emailIsValid = !repository.existsByEmail(command.getEmail().trim());
         if (!emailIsValid) {
             throw new AlreadyExistsException("email");
         }
