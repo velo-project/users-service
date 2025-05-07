@@ -38,8 +38,8 @@ public class LoggingMediatorImp implements Mediator {
 
             return result;
         } catch (Exception e) {
-            log.error("Bean type invalid: {}", className);
-            throw new IllegalArgumentException("Bean type invalid: " + handlerBeanName + " |", e);
+            log.error("Error occurred while handling {}: {}", className, e.getMessage());
+            throw new IllegalArgumentException("Error ocurred while handling " + className + ": " + e.getMessage());
         }
     }
 }
