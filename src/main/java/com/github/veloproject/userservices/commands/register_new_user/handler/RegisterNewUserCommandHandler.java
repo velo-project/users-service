@@ -44,7 +44,9 @@ public class RegisterNewUserCommandHandler implements RequestHandler<RegisterNew
     private void validateEmail(String email) throws InvalidParameterException {
         if (repository.existsByEmail(email)
                 || email.contains(" ")
-                || !email.contains("@"))
+                || !email.contains("@")
+                || email.length() < 6
+                || email.length() > 60)
             throw new InvalidParameterException("email");
     }
 
@@ -53,7 +55,7 @@ public class RegisterNewUserCommandHandler implements RequestHandler<RegisterNew
             throw new InvalidParameterException("name");
         int nameWordsLength = name.trim().split("\\s+").length;
 
-        if (nameWordsLength < 2 || name.length() > 100)
+        if (nameWordsLength < 2 || name.length() <= 6 || name.length() > 100)
             throw new InvalidParameterException("name");
     }
 
