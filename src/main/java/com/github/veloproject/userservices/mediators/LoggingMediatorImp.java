@@ -9,6 +9,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+
 @Slf4j
 @Component
 public class LoggingMediatorImp implements Mediator {
@@ -21,25 +22,28 @@ public class LoggingMediatorImp implements Mediator {
     @Override
     public <TResponse extends Response> TResponse send(Request<TResponse> request) {
         var className = request.getClass().getSimpleName();
-        log.info("Request received: {}", className);
+        log.info("{}: Request received.", className);
 
-        var handlerBeanName = Character.toLowerCase(className.charAt(0)) + className.substring(1) + "Handler";
+        var handlerBeanName = Character.toLowerCase(className.charAt(0))
+                + className.substring(1)
+                + "Handler";
 
         if (!appContext.containsBean(handlerBeanName)) {
-            log.error("No handler bean found: {}", className);
+            log.error("{}: No handler bean found.", className);
             throw new NoSuchBeanDefinitionException(handlerBeanName);
         }
+
         try {
             @SuppressWarnings("unchecked")
             var handler = (RequestHandler<Request<TResponse>, TResponse>) appContext.getBean(handlerBeanName);
-            log.info("Handling request: {}", className);
+            log.info("{}: Handling request.", className);
             var result = handler.handle(request);
-            log.info("Handled successfully: {}", className);
+            log.info("{}: Handled successfully.", className);
 
             return result;
         } catch (Exception e) {
-            log.error("Error occurred while handling {}: {}", className, e.getMessage());
-            throw new IllegalArgumentException("Error ocurred while handling " + className + ": " + e.getMessage());
+            log.error("{}: {}", className, e.getMessage());
+            throw e;
         }
     }
 }
