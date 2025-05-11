@@ -7,6 +7,7 @@ import com.github.veloproject.userservices.mediators.contracts.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
 
 
@@ -21,6 +22,15 @@ public class LoggingMediatorImp implements Mediator {
 
     @Override
     public <TResponse extends Response> TResponse send(Request<TResponse> request) {
+        return sendRequestToHandler(request, null);
+    }
+
+    public <TResponse extends Response> TResponse send(Request<TResponse> request,
+                                                       JwtAuthenticationToken token) {
+        return sendRequestToHandler(request, token);
+    }
+
+    private <TResponse extends Response> TResponse sendRequestToHandler(Request<TResponse> request, JwtAuthenticationToken token) {
         var className = request.getClass().getSimpleName();
         log.info("{}: Request received.", className);
 
@@ -37,7 +47,7 @@ public class LoggingMediatorImp implements Mediator {
             @SuppressWarnings("unchecked")
             var handler = (RequestHandler<Request<TResponse>, TResponse>) appContext.getBean(handlerBeanName);
             log.info("{}: Handling request.", className);
-            var result = handler.handle(request);
+            var result = handler.handle(request, token);
             log.info("{}: Handled successfully.", className);
 
             return result;
