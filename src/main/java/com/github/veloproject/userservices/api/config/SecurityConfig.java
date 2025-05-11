@@ -38,9 +38,14 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**")
                         .permitAll()
+
                         .requestMatchers(HttpMethod.POST,
                                 "/api/user_services/login",
                                 "/api/user_services/register")
+                        .permitAll()
+
+                        .requestMatchers(HttpMethod.PUT,
+                                "api/user_services/edit_profile")
                         .permitAll()
                     .anyRequest().authenticated())
                 .csrf(csrf -> csrf
