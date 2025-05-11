@@ -8,6 +8,7 @@ import com.github.veloproject.userservices.persistence.repositories.UserReposito
 import com.github.veloproject.userservices.shared.exceptions.InvalidParameterException;
 import com.github.veloproject.userservices.shared.utils.CryptographyUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RegisterNewUserCommandHandler implements RequestHandler<RegisterNewUserCommand, RegisterNewUserCommandResult> {
@@ -18,6 +19,7 @@ public class RegisterNewUserCommandHandler implements RequestHandler<RegisterNew
     }
 
     @Override
+    @Transactional
     public RegisterNewUserCommandResult handle(RegisterNewUserCommand command) {
         validateEmail(command.getEmail());
         validateName(command.getName());
