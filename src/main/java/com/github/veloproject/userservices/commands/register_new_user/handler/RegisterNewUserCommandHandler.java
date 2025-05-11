@@ -49,16 +49,16 @@ public class RegisterNewUserCommandHandler implements RequestHandler<RegisterNew
                 || !email.contains("@")
                 || email.length() < 6
                 || email.length() > 60)
-            throw new InvalidParameterException("email");
+            throw new InvalidParameterException("Email address must be valid.");
     }
 
     private void validateName(String name) throws InvalidParameterException {
         if (name == null)
-            throw new InvalidParameterException("name");
+            throw new InvalidParameterException("Name must be provided.");
         int nameWordsLength = name.trim().split("\\s+").length;
 
         if (nameWordsLength < 2 || name.length() <= 6 || name.length() > 100)
-            throw new InvalidParameterException("name");
+            throw new InvalidParameterException("Name must be valid.");
     }
 
     private void validatePassword(String password) throws InvalidParameterException {
@@ -66,6 +66,6 @@ public class RegisterNewUserCommandHandler implements RequestHandler<RegisterNew
                 || password.length() < 8
                 || password.length() > 20
                 || password.contains(" "))
-            throw new InvalidParameterException("password");
+            throw new InvalidParameterException("Password must have between 8 and 20 characters and no invalid characters.");
     }
 }
