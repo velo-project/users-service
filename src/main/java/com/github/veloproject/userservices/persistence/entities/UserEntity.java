@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -47,6 +48,16 @@ public class UserEntity {
     @CreationTimestamp
     @Column(name = "registered_at")
     private LocalDateTime registeredAt;
+
+    @ManyToMany(
+            fetch = FetchType.EAGER
+    )
+    @JoinTable(
+            name = "tb_users_roles",
+            joinColumns = @JoinColumn(name = "id_user"),
+            inverseJoinColumns = @JoinColumn(name = "id_role")
+    )
+    private Set<RoleEntity> roles;
 
     public UserEntity(String name, String email, String password) {
         this.name = name;
