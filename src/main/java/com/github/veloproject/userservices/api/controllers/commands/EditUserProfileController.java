@@ -2,7 +2,7 @@ package com.github.veloproject.userservices.api.controllers.commands;
 
 import com.github.veloproject.userservices.commands.edit_user_profile.EditUserProfileCommand;
 import com.github.veloproject.userservices.commands.edit_user_profile.EditUserProfileCommandResult;
-import com.github.veloproject.userservices.mediators.LoggingMediatorImp;
+import com.github.veloproject.userservices.mediators.implementations.LoggingMediatorImp;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.PutMapping;
