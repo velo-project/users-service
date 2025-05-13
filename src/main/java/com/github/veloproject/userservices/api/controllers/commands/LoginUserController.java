@@ -2,7 +2,7 @@ package com.github.veloproject.userservices.api.controllers.commands;
 
 import com.github.veloproject.userservices.commands.login_user.LoginUserCommand;
 import com.github.veloproject.userservices.commands.login_user.LoginUserCommandResult;
-import com.github.veloproject.userservices.mediators.LoggingMediatorImp;
+import com.github.veloproject.userservices.mediators.implementations.LoggingMediatorImp;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
