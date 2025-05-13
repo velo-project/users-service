@@ -2,7 +2,8 @@ package com.github.veloproject.userservices.commands.login_user.handler;
 
 import com.github.veloproject.userservices.commands.login_user.LoginUserCommand;
 import com.github.veloproject.userservices.commands.login_user.LoginUserCommandResult;
-import com.github.veloproject.userservices.mediators.contracts.RequestHandler;
+import com.github.veloproject.userservices.mediators.contracts.handlers.NoAuthRequestHandler;
+import com.github.veloproject.userservices.persistence.entities.RoleEntity;
 import com.github.veloproject.userservices.persistence.entities.UserEntity;
 import com.github.veloproject.userservices.persistence.repositories.UserRepository;
 import com.github.veloproject.userservices.shared.exceptions.IncorrectInformationsProvided;
@@ -13,9 +14,10 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.stream.Collectors;
 
 @Service
-public class LoginUserCommandHandler implements RequestHandler<LoginUserCommand, LoginUserCommandResult> {
+public class LoginUserCommandHandler extends NoAuthRequestHandler<LoginUserCommand, LoginUserCommandResult> {
     private final JwtEncoder jwtEncoder;
     private final UserRepository repository;
 
@@ -30,10 +32,16 @@ public class LoginUserCommandHandler implements RequestHandler<LoginUserCommand,
 
         var now = Instant.now();
         var expiresIn = 300L;
+        var scopes = user.getRoles()
+                .stream()
+                .map(RoleEntity::getName)
+                .collect(Collectors.joining(" "));
+
         var claims = JwtClaimsSet.builder()
                 .issuer("velo-user-services")
                 .subject(user.getId().toString())
                 .issuedAt(now)
+                .claim("scopes", scopes)
                 .expiresAt(now.plusSeconds(expiresIn))
                 .build();
         var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
