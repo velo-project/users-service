@@ -2,10 +2,10 @@ package com.github.veloproject.userservices.commands.edit_user_profile.handler;
 
 import com.github.veloproject.userservices.commands.edit_user_profile.EditUserProfileCommand;
 import com.github.veloproject.userservices.commands.edit_user_profile.EditUserProfileCommandResult;
-import com.github.veloproject.userservices.mediators.contracts.RequestHandler;
+import com.github.veloproject.userservices.mediators.contracts.handlers.AuthRequestHandler;
 import com.github.veloproject.userservices.persistence.entities.UserEntity;
 import com.github.veloproject.userservices.persistence.repositories.UserRepository;
-import com.github.veloproject.userservices.shared.enums.UserProfileUpdatableFieldsEnum;
+import com.github.veloproject.userservices.shared.enums.UserProfileUpdatableField;
 import com.github.veloproject.userservices.shared.exceptions.InvalidParameterException;
 import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class EditUserProfileCommandHandler implements RequestHandler<EditUserProfileCommand, EditUserProfileCommandResult> {
+public class EditUserProfileCommandHandler extends AuthRequestHandler<EditUserProfileCommand, EditUserProfileCommandResult> {
     private final UserRepository repository;
 
     public EditUserProfileCommandHandler(UserRepository repository) {
@@ -37,13 +37,7 @@ public class EditUserProfileCommandHandler implements RequestHandler<EditUserPro
         );
     }
 
-    @Override
-    @Deprecated
-    public EditUserProfileCommandResult handle(EditUserProfileCommand request) {
-        throw new UnsupportedOperationException("Error while handling request: Not supported.");
-    }
-
-    private void updateField(UserProfileUpdatableFieldsEnum field, String fieldValue, UserEntity user) {
+    private void updateField(UserProfileUpdatableField field, String fieldValue, UserEntity user) {
         switch (field) {
             case BANNER_PHOTO -> user.setBannerPhotoUrl(fieldValue);
             case DESCRIPTION -> user.setDescription(fieldValue);
