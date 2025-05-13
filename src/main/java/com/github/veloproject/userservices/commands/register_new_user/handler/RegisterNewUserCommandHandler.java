@@ -2,16 +2,17 @@ package com.github.veloproject.userservices.commands.register_new_user.handler;
 
 import com.github.veloproject.userservices.commands.register_new_user.RegisterNewUserCommand;
 import com.github.veloproject.userservices.commands.register_new_user.RegisterNewUserCommandResult;
-import com.github.veloproject.userservices.mediators.contracts.RequestHandler;
+import com.github.veloproject.userservices.mediators.contracts.handlers.NoAuthRequestHandler;
 import com.github.veloproject.userservices.persistence.entities.UserEntity;
 import com.github.veloproject.userservices.persistence.repositories.UserRepository;
+import com.github.veloproject.userservices.shared.exceptions.AlreadyExistsException;
 import com.github.veloproject.userservices.shared.exceptions.InvalidParameterException;
 import com.github.veloproject.userservices.shared.utils.CryptographyUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class RegisterNewUserCommandHandler implements RequestHandler<RegisterNewUserCommand, RegisterNewUserCommandResult> {
+public class RegisterNewUserCommandHandler extends NoAuthRequestHandler<RegisterNewUserCommand, RegisterNewUserCommandResult> {
     private final UserRepository repository;
 
     public RegisterNewUserCommandHandler(UserRepository repository) {
@@ -43,9 +44,9 @@ public class RegisterNewUserCommandHandler implements RequestHandler<RegisterNew
                 savedUser.getId());
     }
 
-    private void validateEmail(String email) throws InvalidParameterException {
-        if (repository.existsByEmail(email)
-                || email.contains(" ")
+    private void validateEmail(String email) throws AlreadyExistsException, InvalidParameterException {
+        if (repository.existsByEmail(email)) throw new AlreadyExistsException("email");
+        else if (email.contains(" ")
                 || !email.contains("@")
                 || email.length() < 6
                 || email.length() > 60)
