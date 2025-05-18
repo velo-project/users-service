@@ -28,10 +28,27 @@ public class LoginUserCommandHandler extends NoAuthRequestHandler<LoginUserComma
 
     @Override
     public LoginUserCommandResult handle(LoginUserCommand request) {
-        var user = validateUser(request.getEmail(), request.getPassword());
+        if (request.getEmail() == null || request.getEmail().isEmpty()
+                || request.getPassword() == null || request.getPassword().isEmpty())
+            throw new IncorrectInformationsProvided();
 
+        var user = repository.getByEmail(request.getEmail())
+                .filter(u -> CryptographyUtils.compare(request.getPassword(), u.getPassword()))
+                .orElseThrow(IncorrectInformationsProvided::new);
+
+        Long expiresIn = 500L;
+        var jwtValue = generateJwt(user, expiresIn);
+
+        return new LoginUserCommandResult(
+                200,
+                "Logged in.",
+                jwtValue,
+                expiresIn
+        );
+    }
+
+    private String generateJwt(UserEntity user, Long expiresIn) {
         var now = Instant.now();
-        var expiresIn = 300L;
         var scopes = user.getRoles()
                 .stream()
                 .map(RoleEntity::getName)
@@ -41,24 +58,10 @@ public class LoginUserCommandHandler extends NoAuthRequestHandler<LoginUserComma
                 .issuer("velo-user-services")
                 .subject(user.getId().toString())
                 .issuedAt(now)
-                .claim("scopes", scopes)
+                .claim("scope", scopes)
                 .expiresAt(now.plusSeconds(expiresIn))
                 .build();
-        var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 
-        return new LoginUserCommandResult(
-                200,
-                "Successfully registered.",
-                jwtValue,
-                expiresIn
-        );
-    }
-
-    private UserEntity validateUser(String email, String password) {
-        if (email == null || email.isEmpty() || password == null || password.isEmpty()) throw new IncorrectInformationsProvided();
-
-        return repository.getByEmail(email)
-                .filter(u -> CryptographyUtils.compare(password, u.getPassword()))
-                .orElseThrow(IncorrectInformationsProvided::new);
+        return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 }
