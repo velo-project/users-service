@@ -3,7 +3,9 @@ package com.github.veloproject.userservices.commands.register_new_user.handler;
 import com.github.veloproject.userservices.commands.register_new_user.RegisterNewUserCommand;
 import com.github.veloproject.userservices.commands.register_new_user.RegisterNewUserCommandResult;
 import com.github.veloproject.userservices.mediators.contracts.handlers.NoAuthRequestHandler;
+import com.github.veloproject.userservices.persistence.entities.RoleEntity;
 import com.github.veloproject.userservices.persistence.entities.UserEntity;
+import com.github.veloproject.userservices.persistence.repositories.RoleRepository;
 import com.github.veloproject.userservices.persistence.repositories.UserRepository;
 import com.github.veloproject.userservices.shared.exceptions.AlreadyExistsException;
 import com.github.veloproject.userservices.shared.exceptions.InvalidParameterException;
@@ -11,12 +13,17 @@ import com.github.veloproject.userservices.shared.utils.CryptographyUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
+
 @Service
 public class RegisterNewUserCommandHandler extends NoAuthRequestHandler<RegisterNewUserCommand, RegisterNewUserCommandResult> {
     private final UserRepository repository;
+    private final RoleRepository roleRepository;
 
-    public RegisterNewUserCommandHandler(UserRepository repository) {
+    public RegisterNewUserCommandHandler(UserRepository repository,
+                                        RoleRepository roleRepository) {
         this.repository = repository;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -35,6 +42,10 @@ public class RegisterNewUserCommandHandler extends NoAuthRequestHandler<Register
                 hashedPassword
         );
         userEntity.setIsBlocked(false);
+        userEntity.setRoles(Set.of(roleRepository.findByName(
+                RoleEntity
+                .Values
+                .USER.name())));
 
         var savedUser = repository.save(userEntity);
 
