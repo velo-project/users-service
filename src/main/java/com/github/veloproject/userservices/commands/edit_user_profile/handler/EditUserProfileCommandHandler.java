@@ -54,7 +54,7 @@ public class EditUserProfileCommandHandler extends AuthRequestHandler<EditUserPr
     }
 
     private void validateNickname(String fieldValue) {
-        String regex = "^\\w{2,20}$";
+        String regex = "^[a-zA-Z0-9._]{2,20}$";
         if (repository.existsByNickname(fieldValue)) throw new AlreadyExistsException("Nickname already registered.");
         else if (!fieldValue.matches(regex)) throw new InvalidParameterException("Nickname must be valid.");
     }

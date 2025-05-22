@@ -71,7 +71,7 @@ public class RegisterNewUserCommandHandler extends NoAuthRequestHandler<Register
     }
 
     private void validateNickname(String nickname) throws InvalidParameterException {
-        String regex = "^\\w{2,20}$";
+        String regex = "^[a-zA-Z0-9._]{2,20}$";
 
         if (repository.existsByNickname(nickname)) throw new InvalidParameterException("Nickname already exists.");
         else if (nickname == null || !nickname.matches(regex)) throw new InvalidParameterException("Nickname must be valid.");
