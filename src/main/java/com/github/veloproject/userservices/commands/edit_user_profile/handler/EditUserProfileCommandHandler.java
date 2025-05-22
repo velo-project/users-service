@@ -6,6 +6,7 @@ import com.github.veloproject.userservices.mediators.contracts.handlers.AuthRequ
 import com.github.veloproject.userservices.persistence.entities.UserEntity;
 import com.github.veloproject.userservices.persistence.repositories.UserRepository;
 import com.github.veloproject.userservices.shared.enums.UserProfileUpdatableField;
+import com.github.veloproject.userservices.shared.exceptions.AlreadyExistsException;
 import com.github.veloproject.userservices.shared.exceptions.InvalidParameterException;
 import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -42,9 +43,9 @@ public class EditUserProfileCommandHandler extends AuthRequestHandler<EditUserPr
             case BANNER_PHOTO -> user.setBannerPhotoUrl(fieldValue);
             case DESCRIPTION -> user.setDescription(fieldValue);
             case PROFILE_PHOTO -> user.setProfilePhotoUrl(fieldValue);
-            case PREFERRED_NAME -> {
-                validatePreferredName(fieldValue);
-                user.setPrefferedName(fieldValue);
+            case NICKNAME -> {
+                validateNickname(fieldValue);
+                user.setNickname(fieldValue);
             }
             default -> throw new InvalidParameterException("Field '" + field + "' is not supported to update.");
         }
@@ -52,7 +53,9 @@ public class EditUserProfileCommandHandler extends AuthRequestHandler<EditUserPr
         repository.save(user);
     }
 
-    private void validatePreferredName(String fieldValue) {
-        if (fieldValue.length() > 20 || fieldValue.length() < 2) throw new InvalidParameterException("Preferred name field value must have between 2 and 20 characters.");
+    private void validateNickname(String fieldValue) {
+        String regex = "^\\w{2,20}$";
+        if (repository.existsByNickname(fieldValue)) throw new AlreadyExistsException("Nickname already registered.");
+        else if (!fieldValue.matches(regex)) throw new InvalidParameterException("Nickname must be valid.");
     }
 }
