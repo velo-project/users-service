@@ -25,6 +25,9 @@ public class UserEntity {
     @Column(name = "email_user")
     private String email;
 
+    /**
+     * @apiNote Por favor, muito cuidado ao tirar a anotação @JsonIgnore deste atributo.
+     */
     @JsonIgnore
     @Column(name = "password_user")
     private String password;
