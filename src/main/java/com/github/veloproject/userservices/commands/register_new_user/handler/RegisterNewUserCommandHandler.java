@@ -31,6 +31,7 @@ public class RegisterNewUserCommandHandler extends NoAuthRequestHandler<Register
     public RegisterNewUserCommandResult handle(RegisterNewUserCommand command) {
         validateEmail(command.getEmail());
         validateName(command.getName());
+        validateNickname(command.getNickname());
         validatePassword(command.getPassword());
 
         var hashedPassword = CryptographyUtils
@@ -38,6 +39,7 @@ public class RegisterNewUserCommandHandler extends NoAuthRequestHandler<Register
 
         UserEntity userEntity = new UserEntity(
                 command.getName(),
+                command.getNickname(),
                 command.getEmail(),
                 hashedPassword
         );
@@ -56,28 +58,29 @@ public class RegisterNewUserCommandHandler extends NoAuthRequestHandler<Register
     }
 
     private void validateEmail(String email) throws AlreadyExistsException, InvalidParameterException {
+        String regex = "^(?=.{1,60}$)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+
         if (repository.existsByEmail(email)) throw new AlreadyExistsException("email");
-        else if (email.contains(" ")
-                || !email.contains("@")
-                || email.length() < 6
-                || email.length() > 60)
-            throw new InvalidParameterException("Email address must be valid.");
+        else if (email == null || !email.matches(regex)) throw new InvalidParameterException("Email address must be valid.");
     }
 
     private void validateName(String name) throws InvalidParameterException {
-        if (name == null)
-            throw new InvalidParameterException("Name must be provided.");
-        int nameWordsLength = name.trim().split("\\s+").length;
+        String regex = "^[A-Za-zÀ-ÿ](?:[A-Za-zÀ-ÿ ]{0,98}[A-Za-zÀ-ÿ])?$";
 
-        if (nameWordsLength < 2 || name.length() <= 6 || name.length() > 100)
-            throw new InvalidParameterException("Name must be valid.");
+        if (name == null || !name.matches(regex)) throw new InvalidParameterException("Name must be valid.");
+    }
+
+    private void validateNickname(String nickname) throws InvalidParameterException {
+        String regex = "^\\w{2,20}$";
+
+        if (repository.existsByNickname(nickname)) throw new InvalidParameterException("Nickname already exists.");
+        else if (nickname == null || !nickname.matches(regex)) throw new InvalidParameterException("Nickname must be valid.");
     }
 
     private void validatePassword(String password) throws InvalidParameterException {
-        if (password == null
-                || password.length() < 8
-                || password.length() > 20
-                || password.contains(" "))
+        String regex = "^[^\\\\s]{8,20}$";
+
+        if (password == null || !password.matches(regex))
             throw new InvalidParameterException("Password must have between 8 and 20 characters and no invalid characters.");
     }
 }
