@@ -50,6 +50,10 @@ public class SecurityConfig {
                                 "/api/user_services/edit_profile",
                                 "/api/user_services/block")
                         .permitAll()
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/user_services/search")
+                        .permitAll()
                     .anyRequest().authenticated())
                 .csrf(csrf -> csrf
                         .disable()) // disable in prod
