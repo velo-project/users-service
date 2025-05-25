@@ -3,14 +3,14 @@ spring:
     name: UserServices
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/user_services
-    username: postgres
-    password: root
+    url: jdbc:postgresql://${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
 
     driver-class-name: org.postgresql.Driver
 
 jwt:
   public:
-    key: classpath:app.pub
+    key: file:${FILE_PUBKEY}
   private:
-    key: classpath:app.key
+    key: file:${FILE_PRIVKEY}
