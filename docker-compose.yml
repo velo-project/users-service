@@ -11,6 +11,8 @@ services:
       - pgdata:/var/lib/postgresql/data
     expose:
       - "5432"
+    networks:
+      - user_services
 
   app:
     build:
@@ -19,6 +21,8 @@ services:
     container_name: user-services
     expose:
       - "8080"
+    networks:
+      - user_services
     depends_on:
       - db
 
@@ -31,6 +35,12 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - app
+    networks:
+      - user_services
+
+networks:
+  user_services:
+    driver: bridge
 
 volumes:
   pgdata:
