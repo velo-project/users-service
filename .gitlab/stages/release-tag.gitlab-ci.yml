@@ -3,9 +3,11 @@ release-tag-on-git:
   needs:
     - run-unit-tests
   script:
-    - VERSION="1.0.${CI_PIPELINE_IID}"
+    - TIMESTAMP=$($GENERATE_ID)
+    - VERSION="1.${CI_PIPELINE_IID}.${TIMESTAMP}"
     - git config --global user.email "${GITLAB_EMAIL}"
     - git config --global user.name "${GITLAB_NAME}"
+    - git remote set-url origin https://velo-bot:${GITLAB_TOKEN}@gitlab.com/velo-company/services/users-service.git
     - git tag "$VERSION"
     - git push origin "$VERSION"
 #  only:
