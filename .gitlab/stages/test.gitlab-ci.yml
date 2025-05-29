@@ -6,5 +6,5 @@ run-unit-tests:
     - gradle test
   tags:
     - sao-caetano-matrix
-#  only:
-#    - main
+  only:
+    - main

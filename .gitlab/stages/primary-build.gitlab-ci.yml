@@ -3,5 +3,5 @@ primary-build:
   extends: .generate-project-build
   tags:
     - sao-caetano-matrix
-#  only:
-#    - main
+  only:
+    - main
