@@ -3,7 +3,7 @@ release-tag-on-git:
   needs:
     - run-unit-tests
   script:
-    - TIMESTAMP=$($GENERATE_ID)
+    - TIMESTAMP=$(($(date +%s%N)/1000000))
     - VERSION="1.${CI_PIPELINE_IID}.${TIMESTAMP}"
     - git config --global user.email "${GITLAB_EMAIL}"
     - git config --global user.name "${GITLAB_NAME}"
