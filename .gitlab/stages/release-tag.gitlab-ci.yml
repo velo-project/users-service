@@ -1,0 +1,14 @@
+release-tag-on-git:
+  stage: release-tag
+  needs:
+    - run-unit-tests
+  script:
+    - VERSION="1.0.${CI_PIPELINE_IID}"
+    - git config --global user.email "${GITLAB_EMAIL}"
+    - git config --global user.name "${GITLAB_NAME}"
+    - git tag "$VERSION"
+    - git push origin "$VERSION"
+  only:
+    - main
+#  tags:
+#    - sao-caetano-matrix
