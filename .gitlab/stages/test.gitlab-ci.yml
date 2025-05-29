@@ -4,7 +4,7 @@ run-unit-tests:
     - primary-build
   script:
     - gradle test
-#  tags:
-#    - sao-caetano-matrix
-  only:
-    - main
+  tags:
+    - sao-caetano-matrix
+#  only:
+#    - main

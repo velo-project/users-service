@@ -8,7 +8,7 @@ release-tag-on-git:
     - git config --global user.name "${GITLAB_NAME}"
     - git tag "$VERSION"
     - git push origin "$VERSION"
-  only:
-    - main
-#  tags:
-#    - sao-caetano-matrix
+#  only:
+#    - main
+  tags:
+    - sao-caetano-matrix
