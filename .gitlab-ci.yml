@@ -1,0 +1,11 @@
+stages:
+  - primary-build
+  - test
+  - release-tag
+
+include:
+  # templates
+  - local: ".gitlab/templates/generate-build.gitlab-ci.yml"
+  # stages
+  - local: ".gitlab/stages/primary-build.gitlab-ci.yml"
+  - local: ".gitlab/stages/test.gitlab-ci.yml"

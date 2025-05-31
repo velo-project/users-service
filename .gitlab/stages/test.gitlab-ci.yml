@@ -1,0 +1,10 @@
+run-unit-tests:
+  stage: test
+  needs:
+    - primary-build
+  script:
+    - gradle test
+  tags:
+    - sao-caetano-matrix
+  only:
+    - main

@@ -1,0 +1,7 @@
+primary-build:
+  stage: primary-build
+  extends: .generate-project-build
+  tags:
+    - sao-caetano-matrix
+  only:
+    - main
