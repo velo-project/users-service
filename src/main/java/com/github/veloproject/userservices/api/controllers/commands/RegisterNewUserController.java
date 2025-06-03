@@ -22,7 +22,7 @@ public class RegisterNewUserController {
     public ResponseEntity<RegisterNewUserCommandResult> registerNewUser(@RequestBody RegisterNewUserCommand command) {
         var response = mediator.send(command);
         return ResponseEntity
-                .status(response.getStatus())
+                .status(response.getStatusCode())
                 .body(response);
     }
 }

@@ -22,7 +22,7 @@ public class LoginUserController {
     public ResponseEntity<LoginUserCommandResult> registerNewUser(@RequestBody LoginUserCommand command) {
         var response = mediator.send(command);
         return ResponseEntity
-                .status(response.getStatus())
+                .status(response.getStatusCode())
                 .body(response);
     }
 }

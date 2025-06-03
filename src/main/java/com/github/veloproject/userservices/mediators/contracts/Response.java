@@ -9,13 +9,13 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class Response {
-    private Integer status;
+    private Integer statusCode;
     private String message;
     @Setter(AccessLevel.PRIVATE)
     private LocalDateTime timestamp;
 
-    public Response(Integer status, String message) {
-        this.status = status;
+    public Response(Integer statusCode, String message) {
+        this.statusCode = statusCode;
         this.message = message;
         this.timestamp = LocalDateTime.now();
     }

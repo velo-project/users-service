@@ -25,12 +25,15 @@ public class UserEntity {
     @Column(name = "email_user")
     private String email;
 
+    /**
+     * @apiNote Por favor, muito cuidado ao tirar a anotação @JsonIgnore deste atributo.
+     */
     @JsonIgnore
     @Column(name = "password_user")
     private String password;
 
     @Column(name = "nickname_user")
-    private String prefferedName;
+    private String nickname;
 
     @Column(name = "banner_photo_url_user")
     private String bannerPhotoUrl;
@@ -59,8 +62,9 @@ public class UserEntity {
     )
     private Set<RoleEntity> roles;
 
-    public UserEntity(String name, String email, String password) {
+    public UserEntity(String name, String nickname, String email, String password) {
         this.name = name;
+        this.nickname = nickname;
         this.email = email;
         this.password = password;
     }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class AlreadyExistsExceptionHandler {
     @ExceptionHandler(AlreadyExistsException.class)
     public ResponseEntity<Response> handleException(AlreadyExistsException e) {
-        int responseStatus = 500;
+        int responseStatus = 409;
         return ResponseEntity
                 .status(responseStatus)
                 .body(new Response(responseStatus, e.getMessage()));

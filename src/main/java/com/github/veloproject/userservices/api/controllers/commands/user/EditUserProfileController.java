@@ -1,11 +1,12 @@
-package com.github.veloproject.userservices.api.controllers.commands;
+package com.github.veloproject.userservices.api.controllers.commands.user;
 
 import com.github.veloproject.userservices.commands.edit_user_profile.EditUserProfileCommand;
 import com.github.veloproject.userservices.commands.edit_user_profile.EditUserProfileCommandResult;
 import com.github.veloproject.userservices.mediators.implementations.LoggingMediatorImp;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,12 +20,13 @@ public class EditUserProfileController {
         this.mediator = mediator;
     }
 
-    @PutMapping("/edit_profile")
+    @PatchMapping("/edit_profile")
+    @PreAuthorize("hasAuthority('SCOPE_USER')")
     public ResponseEntity<EditUserProfileCommandResult> editUserProfile(@RequestBody EditUserProfileCommand command,
                                                                         JwtAuthenticationToken token) {
         var response = mediator.send(command, token);
         return ResponseEntity
-                .status(response.getStatus())
+                .status(response.getStatusCode())
                 .body(response);
     }
 }

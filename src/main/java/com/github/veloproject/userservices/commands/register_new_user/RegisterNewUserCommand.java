@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 public class RegisterNewUserCommand implements Request<RegisterNewUserCommandResult> {
     private String name;
+    private String nickname;
     private String email;
     private String password;
 }

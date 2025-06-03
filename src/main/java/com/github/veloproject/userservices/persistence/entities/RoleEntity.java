@@ -22,7 +22,8 @@ public class RoleEntity {
     @Getter
     public enum Values {
         USER(1),
-        ADMIN(2);
+        ENTERPRISE(2),
+        ADMIN(3);
 
         final Integer value;
         Values(Integer value) {
