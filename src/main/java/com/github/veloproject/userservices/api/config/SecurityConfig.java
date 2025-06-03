@@ -41,6 +41,10 @@ public class SecurityConfig {
                                 "/swagger-ui/**")
                         .permitAll()
 
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/user_services/search")
+                        .permitAll()
+
                         .requestMatchers(HttpMethod.POST,
                                 "/api/user_services/login",
                                 "/api/user_services/register")
@@ -48,12 +52,14 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.PATCH,
                                 "/api/user_services/edit_profile",
-                                "/api/user_services/block")
+                                "/api/user_services/admin/block",
+                                "/api/user_services/admin/unblock")
                         .permitAll()
 
-                        .requestMatchers(HttpMethod.GET,
-                                "/api/user_services/search")
+                        .requestMatchers(HttpMethod.DELETE,
+                                "/api/user_services/admin/delete")
                         .permitAll()
+
                     .anyRequest().authenticated())
                 .csrf(csrf -> csrf
                         .disable()) // disable in prod
