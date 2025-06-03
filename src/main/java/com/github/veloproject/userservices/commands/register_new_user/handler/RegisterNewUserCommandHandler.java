@@ -44,6 +44,7 @@ public class RegisterNewUserCommandHandler extends NoAuthRequestHandler<Register
                 hashedPassword
         );
         userEntity.setIsBlocked(false);
+        userEntity.setIsDeleted(false);
         userEntity.setRoles(Set.of(roleRepository.findByName(
                 RoleEntity
                 .Values
