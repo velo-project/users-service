@@ -7,5 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BlockUserCommand implements Request<BlockUserCommandResult> {
-    private String email;
+    private String nickname;
+
+    public BlockUserCommand(String nickname) {
+        this.nickname = nickname;
+    }
 }

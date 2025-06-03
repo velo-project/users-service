@@ -21,10 +21,10 @@ public class BlockUserCommandHandler
     @Override
     public BlockUserCommandResult handle(BlockUserCommand request,
                                          JwtAuthenticationToken token) {
-        if (request.getEmail() == null) throw new InvalidParameterException("Email must be specified.");
+        if (request.getNickname() == null) throw new InvalidParameterException("Nickname must be specified.");
 
         var user = repository
-                .getByEmail(request.getEmail())
+                .getByNickname(request.getNickname())
                 .orElseThrow(IncorrectInformationsProvided::new);
         user.setIsBlocked(true);
         repository.save(user);
