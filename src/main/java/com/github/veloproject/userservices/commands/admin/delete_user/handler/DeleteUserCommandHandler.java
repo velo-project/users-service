@@ -4,6 +4,8 @@ import com.github.veloproject.userservices.commands.admin.delete_user.DeleteUser
 import com.github.veloproject.userservices.commands.admin.delete_user.DeleteUserCommandResult;
 import com.github.veloproject.userservices.mediators.contracts.handlers.AuthRequestHandler;
 import com.github.veloproject.userservices.persistence.repositories.UserRepository;
+import com.github.veloproject.userservices.shared.exceptions.IncorrectInformationsProvided;
+import com.github.veloproject.userservices.shared.exceptions.InvalidParameterException;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +19,19 @@ public class DeleteUserCommandHandler
     }
 
     @Override
-    public DeleteUserCommandResult handle(DeleteUserCommand request, JwtAuthenticationToken token) {
-        return null;
+    public DeleteUserCommandResult handle(DeleteUserCommand request,
+                                          JwtAuthenticationToken token) {
+        if (request.getNickname() == null) throw new InvalidParameterException("Nickname must be specified.");
+
+        var user = repository
+                .getByNickname(request.getNickname())
+                .orElseThrow(IncorrectInformationsProvided::new);
+        user.setIsDeleted(true);
+        repository.save(user);
+
+        return new DeleteUserCommandResult(
+                200,
+                "User deleted."
+        );
     }
 }
