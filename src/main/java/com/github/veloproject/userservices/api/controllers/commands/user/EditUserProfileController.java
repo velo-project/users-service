@@ -1,7 +1,7 @@
 package com.github.veloproject.userservices.api.controllers.commands.user;
 
-import com.github.veloproject.userservices.commands.edit_user_profile.EditUserProfileCommand;
-import com.github.veloproject.userservices.commands.edit_user_profile.EditUserProfileCommandResult;
+import com.github.veloproject.userservices.commands.user.edit_user_profile.EditUserProfileCommand;
+import com.github.veloproject.userservices.commands.user.edit_user_profile.EditUserProfileCommandResult;
 import com.github.veloproject.userservices.mediators.implementations.LoggingMediatorImp;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
