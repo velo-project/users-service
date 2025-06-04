@@ -1,4 +1,4 @@
-package com.github.veloproject.userservices.commands.edit_user_profile;
+package com.github.veloproject.userservices.commands.user.edit_user_profile;
 
 import com.github.veloproject.userservices.mediators.contracts.Response;
 import lombok.Getter;
