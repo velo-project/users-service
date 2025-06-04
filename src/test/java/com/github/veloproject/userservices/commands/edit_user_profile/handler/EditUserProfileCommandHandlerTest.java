@@ -1,7 +1,8 @@
 package com.github.veloproject.userservices.commands.edit_user_profile.handler;
 
-import com.github.veloproject.userservices.commands.edit_user_profile.EditUserProfileCommand;
-import com.github.veloproject.userservices.commands.edit_user_profile.EditUserProfileCommandResult;
+import com.github.veloproject.userservices.commands.user.edit_user_profile.EditUserProfileCommand;
+import com.github.veloproject.userservices.commands.user.edit_user_profile.EditUserProfileCommandResult;
+import com.github.veloproject.userservices.commands.user.edit_user_profile.handler.EditUserProfileCommandHandler;
 import com.github.veloproject.userservices.persistence.entities.UserEntity;
 import com.github.veloproject.userservices.persistence.repositories.UserRepository;
 import com.github.veloproject.userservices.shared.enums.UserProfileUpdatableField;
@@ -31,7 +32,7 @@ class EditUserProfileCommandHandlerTest {
     void shouldUpdatePreferredNameSuccessfully() {
         // Arrange
         var command = new EditUserProfileCommand();
-        command.setField(UserProfileUpdatableField.PREFERRED_NAME);
+        command.setField(UserProfileUpdatableField.NICKNAME);
         command.setFieldValue("NewName");
 
         var token = mock(JwtAuthenticationToken.class);
@@ -44,13 +45,13 @@ class EditUserProfileCommandHandlerTest {
         EditUserProfileCommandResult result = handler.handle(command, token);
 
         // Assert
-        assertEquals(200, result.getStatus());
+        assertEquals(200, result.getStatusCode());
         assertEquals("Field 'PREFERRED_NAME' successfully updated.", result.getMessage());
 
         ArgumentCaptor<UserEntity> captor = ArgumentCaptor.forClass(UserEntity.class);
         verify(repository).save(captor.capture());
 
-        assertEquals("NewName", captor.getValue().getPrefferedName());
+        assertEquals("NewName", captor.getValue().getNickname());
     }
 
     @Test
@@ -85,7 +86,7 @@ class EditUserProfileCommandHandlerTest {
     @Test
     void shouldThrowWhenPreferredNameTooShort() {
         var command = new EditUserProfileCommand();
-        command.setField(UserProfileUpdatableField.PREFERRED_NAME);
+        command.setField(UserProfileUpdatableField.NICKNAME);
         command.setFieldValue("A");
 
         var token = mock(JwtAuthenticationToken.class);

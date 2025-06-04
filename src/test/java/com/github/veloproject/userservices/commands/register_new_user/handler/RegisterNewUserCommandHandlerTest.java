@@ -2,6 +2,7 @@ package com.github.veloproject.userservices.commands.register_new_user.handler;
 
 import com.github.veloproject.userservices.commands.register_new_user.RegisterNewUserCommand;
 import com.github.veloproject.userservices.persistence.entities.UserEntity;
+import com.github.veloproject.userservices.persistence.repositories.RoleRepository;
 import com.github.veloproject.userservices.persistence.repositories.UserRepository;
 import com.github.veloproject.userservices.shared.exceptions.InvalidParameterException;
 import org.junit.jupiter.api.AfterEach;
@@ -23,11 +24,14 @@ class RegisterNewUserCommandHandlerTest {
     @Mock
     UserRepository userRepository;
 
+    @Mock
+    RoleRepository roleRepository;
+
     RegisterNewUserCommandHandler handler;
 
     @BeforeEach
     void beforeEach() {
-        handler = new RegisterNewUserCommandHandler(userRepository);
+        handler = new RegisterNewUserCommandHandler(userRepository, roleRepository);
     }
 
     @AfterEach
@@ -40,24 +44,29 @@ class RegisterNewUserCommandHandlerTest {
         // Arrange
         var command = new RegisterNewUserCommand();
         command.setEmail("johndoe@example.com");
+        command.setNickname("john.doe");
         command.setPassword("12345678");
         command.setName("John Doe");
 
         var user = new UserEntity(
                 command.getName(),
+                command.getNickname(),
                 command.getEmail(),
-                ""
+                command.getPassword()
         );
         user.setId(1);
 
         when(userRepository.save(any())).thenReturn(user);
 
         // Act
+        /**
+         * TODO resolver null pointer
+         */
         var result = handler.handle(command);
 
         // Assert
         assertEquals("Successfully registered.", result.getMessage());
-        assertEquals(200, result.getStatus());
+        assertEquals(200, result.getStatusCode());
         assertEquals(1, result.getCreatedUserId());
         assertNotNull(result.getCreatedUserId());
     }
@@ -68,11 +77,13 @@ class RegisterNewUserCommandHandlerTest {
         // Arrange
         var command = new RegisterNewUserCommand();
         command.setEmail(email);
+        command.setNickname("john.doe");
         command.setPassword("12345678");
         command.setName("John Doe");
 
         var user = new UserEntity(
                 command.getName(),
+                command.getNickname(),
                 command.getEmail(),
                 ""
         );
@@ -93,11 +104,13 @@ class RegisterNewUserCommandHandlerTest {
         // Arrange
         var command = new RegisterNewUserCommand();
         command.setEmail("johndoe@example.com");
+        command.setNickname("john.doe");
         command.setPassword("12345678");
         command.setName(name);
 
         var user = new UserEntity(
                 command.getName(),
+                command.getNickname(),
                 command.getEmail(),
                 ""
         );
@@ -120,10 +133,12 @@ class RegisterNewUserCommandHandlerTest {
         var command = new RegisterNewUserCommand();
         command.setEmail("johndoe@example.com");
         command.setPassword(password);
+        command.setNickname("john.doe");
         command.setName("John Doe");
 
         var user = new UserEntity(
                 command.getName(),
+                command.getNickname(),
                 command.getEmail(),
                 ""
         );

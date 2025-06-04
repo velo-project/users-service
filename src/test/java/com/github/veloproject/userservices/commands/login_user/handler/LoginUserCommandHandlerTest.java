@@ -13,11 +13,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -53,6 +51,7 @@ class LoginUserCommandHandlerTest {
 
         var user = new UserEntity(
                 "John Doe",
+                "john.doe",
                 command.getEmail(),
                 CryptographyUtils.encrypt(command.getPassword())
         );
@@ -77,7 +76,7 @@ class LoginUserCommandHandlerTest {
         var result = handler.handle(command);
 
         // Assert
-        assertEquals(200, result.getStatus());
+        assertEquals(200, result.getStatusCode());
         assertEquals("Successfully registered.", result.getMessage());
         assertEquals(300L, result.getExpiresIn());
     }
