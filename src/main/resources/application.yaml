@@ -1,6 +1,10 @@
 spring:
   application:
     name: UserServices
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
 
   datasource:
     url: jdbc:postgresql://${DATABASE_URL}
@@ -14,3 +18,8 @@ jwt:
     key: file:${FILE_PUBKEY}
   private:
     key: file:${FILE_PRIVKEY}
+
+app:
+  image:
+    upload-dir: ${IMAGES_UPLOADIR_PATH}
+
