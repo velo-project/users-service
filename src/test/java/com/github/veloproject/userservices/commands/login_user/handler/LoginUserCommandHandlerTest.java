@@ -77,8 +77,8 @@ class LoginUserCommandHandlerTest {
 
         // Assert
         assertEquals(200, result.getStatusCode());
-        assertEquals("Successfully registered.", result.getMessage());
-        assertEquals(300L, result.getExpiresIn());
+        assertEquals("Logged in.", result.getMessage());
+        assertEquals(500L, result.getExpiresIn());
     }
 
     @Test
