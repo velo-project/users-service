@@ -1,7 +1,7 @@
-package com.github.veloproject.userservices.commands.edit_user_profile.handler;
+package com.github.veloproject.userservices.commands.user.edit_user_profile.handler;
 
-import com.github.veloproject.userservices.commands.edit_user_profile.EditUserProfileCommand;
-import com.github.veloproject.userservices.commands.edit_user_profile.EditUserProfileCommandResult;
+import com.github.veloproject.userservices.commands.user.edit_user_profile.EditUserProfileCommand;
+import com.github.veloproject.userservices.commands.user.edit_user_profile.EditUserProfileCommandResult;
 import com.github.veloproject.userservices.mediators.contracts.handlers.AuthRequestHandler;
 import com.github.veloproject.userservices.persistence.entities.UserEntity;
 import com.github.veloproject.userservices.persistence.repositories.UserRepository;
@@ -40,9 +40,7 @@ public class EditUserProfileCommandHandler extends AuthRequestHandler<EditUserPr
 
     private void updateField(UserProfileUpdatableField field, String fieldValue, UserEntity user) {
         switch (field) {
-            case BANNER_PHOTO -> user.setBannerPhotoUrl(fieldValue);
             case DESCRIPTION -> user.setDescription(fieldValue);
-            case PROFILE_PHOTO -> user.setProfilePhotoUrl(fieldValue);
             case NICKNAME -> {
                 validateNickname(fieldValue);
                 user.setNickname(fieldValue);

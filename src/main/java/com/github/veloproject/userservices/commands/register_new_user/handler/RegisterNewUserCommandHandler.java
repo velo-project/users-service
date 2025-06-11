@@ -66,9 +66,9 @@ public class RegisterNewUserCommandHandler extends NoAuthRequestHandler<Register
     }
 
     private void validateName(String name) throws InvalidParameterException {
-        String regex = "^[A-Za-zÀ-ÿ](?:[A-Za-zÀ-ÿ ]{0,98}[A-Za-zÀ-ÿ])?$";
+        String regex = "^[A-Za-zÀ-ÿ\\s]+$";
 
-        if (name == null || !name.matches(regex)) throw new InvalidParameterException("Name must be valid.");
+        if (name == null || !name.matches(regex) || name.length() < 3 || name.length() > 100) throw new InvalidParameterException("Name must be valid.");
     }
 
     private void validateNickname(String nickname) throws InvalidParameterException {
@@ -79,9 +79,12 @@ public class RegisterNewUserCommandHandler extends NoAuthRequestHandler<Register
     }
 
     private void validatePassword(String password) throws InvalidParameterException {
-        String regex = "^[^\\\\s]{8,20}$";
+        String regex = "^[^\\s]*$";
 
         if (password == null || !password.matches(regex))
             throw new InvalidParameterException("Password must have between 8 and 20 characters and no invalid characters.");
+        if (password.length() > 20 || password.length() < 8) {
+            throw new InvalidParameterException("Password must have between 8 and 20 characters and no invalid characters.");
+        }
     }
 }

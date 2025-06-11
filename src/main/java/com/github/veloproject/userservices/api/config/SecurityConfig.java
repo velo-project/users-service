@@ -52,6 +52,8 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.PATCH,
                                 "/api/user_services/edit_profile",
+                                "/api/user_services/edit_banner",
+                                "/api/user_services/edit_photo",
                                 "/api/user_services/admin/block",
                                 "/api/user_services/admin/unblock")
                         .permitAll()
