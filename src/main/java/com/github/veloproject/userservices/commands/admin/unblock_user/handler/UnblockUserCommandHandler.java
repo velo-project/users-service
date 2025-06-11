@@ -1,7 +1,7 @@
-package com.github.veloproject.userservices.commands.admin.delete_user.handler;
+package com.github.veloproject.userservices.commands.admin.unblock_user.handler;
 
-import com.github.veloproject.userservices.commands.admin.delete_user.DeleteUserCommand;
-import com.github.veloproject.userservices.commands.admin.delete_user.DeleteUserCommandResult;
+import com.github.veloproject.userservices.commands.admin.unblock_user.UnblockUserCommand;
+import com.github.veloproject.userservices.commands.admin.unblock_user.UnblockUserCommandResult;
 import com.github.veloproject.userservices.mediators.contracts.handlers.AuthRequestHandler;
 import com.github.veloproject.userservices.persistence.repositories.UserRepository;
 import com.github.veloproject.userservices.shared.exceptions.IncorrectInformationsProvided;
@@ -10,28 +10,27 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.stereotype.Service;
 
 @Service
-public class DeleteUserCommandHandler
-        extends AuthRequestHandler<DeleteUserCommand, DeleteUserCommandResult> {
+public class UnblockUserCommandHandler
+        extends AuthRequestHandler<UnblockUserCommand, UnblockUserCommandResult> {
     private final UserRepository repository;
 
-    public DeleteUserCommandHandler(UserRepository repository) {
+    public UnblockUserCommandHandler(UserRepository repository) {
         this.repository = repository;
     }
 
     @Override
-    public DeleteUserCommandResult handle(DeleteUserCommand request,
-                                          JwtAuthenticationToken token) {
+    public UnblockUserCommandResult handle(UnblockUserCommand request, JwtAuthenticationToken token) {
         if (request.getNickname() == null) throw new InvalidParameterException("Nickname must be specified.");
 
         var user = repository
                 .getByNickname(request.getNickname())
                 .orElseThrow(IncorrectInformationsProvided::new);
-        user.setIsDeleted(true);
+        user.setIsBlocked(false);
         repository.save(user);
 
-        return new DeleteUserCommandResult(
+        return new UnblockUserCommandResult(
                 200,
-                "User deleted."
+                "User unblocked."
         );
     }
 }

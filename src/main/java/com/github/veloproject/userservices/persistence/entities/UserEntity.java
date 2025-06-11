@@ -47,6 +47,9 @@ public class UserEntity {
     @Column(name = "blocked_user")
     private Boolean isBlocked;
 
+    @Column(name = "deleted_user")
+    private Boolean isDeleted;
+
     @Setter(AccessLevel.PRIVATE)
     @CreationTimestamp
     @Column(name = "registered_at")
