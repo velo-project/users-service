@@ -10,6 +10,7 @@ import com.github.veloproject.userservices.shared.file_managers.ImageService;
 import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
@@ -26,6 +27,7 @@ public class EditUserProfilePhotoCommandHandler
         this.imageService = imageService;
     }
     @Override
+    @Transactional
     public EditUserProfilePhotoCommandResult handle(EditUserProfilePhotoCommand request,
                                                     JwtAuthenticationToken token) {
         if (request.getFile() == null || request.getFile().isEmpty()) throw new InvalidParameterException("Image must be uploaded.");

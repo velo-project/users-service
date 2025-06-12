@@ -10,6 +10,7 @@ import com.github.veloproject.userservices.shared.file_managers.ImageService;
 import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
@@ -27,6 +28,7 @@ public class EditUserProfileBannerCommandHandler
 
     // TODO Melhorias na legibilidade do código, alteração no tamanho da imagem.
     @Override
+    @Transactional
     public EditUserProfileBannerCommandResult handle(EditUserProfileBannerCommand request,
                                                      JwtAuthenticationToken token) {
         if (request.getFile() == null || request.getFile().isEmpty()) throw new InvalidParameterException("Image must be uploaded.");
