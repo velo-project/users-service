@@ -33,6 +33,7 @@ public class LoginUserCommandHandler extends NoAuthRequestHandler<LoginUserComma
             throw new IncorrectInformationsProvided();
 
         var user = repository.getByEmail(request.getEmail())
+                .filter(u -> !u.getIsDeleted())
                 .filter(u -> CryptographyUtils.compare(request.getPassword(), u.getPassword()))
                 .orElseThrow(IncorrectInformationsProvided::new);
 
@@ -62,6 +63,8 @@ public class LoginUserCommandHandler extends NoAuthRequestHandler<LoginUserComma
                 .expiresAt(now.plusSeconds(expiresIn))
                 .build();
 
-        return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+        return jwtEncoder
+                .encode(JwtEncoderParameters.from(claims))
+                .getTokenValue();
     }
 }
