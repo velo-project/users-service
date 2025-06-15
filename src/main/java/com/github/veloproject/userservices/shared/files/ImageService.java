@@ -1,4 +1,4 @@
-package com.github.veloproject.userservices.shared.file_managers;
+package com.github.veloproject.userservices.shared.files;
 
 import com.github.veloproject.userservices.shared.exceptions.InvalidFileType;
 import com.github.veloproject.userservices.shared.exceptions.InvalidParameterException;
