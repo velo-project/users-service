@@ -7,12 +7,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LoginUserCommandResult extends Response {
-    private String token;
-    private Long expiresIn;
+    private String key;
 
-    public LoginUserCommandResult(Integer status, String message, String token, Long expiresIn) {
+    public LoginUserCommandResult(Integer status, String message, String key) {
         super(status, message);
-        this.token = token;
-        this.expiresIn = expiresIn;
+        this.key = key;
     }
 }

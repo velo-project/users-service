@@ -19,7 +19,7 @@ public class LoginUserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginUserCommandResult> registerNewUser(@RequestBody LoginUserCommand command) {
+    public ResponseEntity<LoginUserCommandResult> loginUser(@RequestBody LoginUserCommand command) {
         var response = mediator.send(command);
         return ResponseEntity
                 .status(response.getStatusCode())
