@@ -6,7 +6,7 @@ import com.github.veloproject.userservices.mediators.contracts.handlers.AuthRequ
 import com.github.veloproject.userservices.persistence.repositories.UserRepository;
 import com.github.veloproject.userservices.shared.exceptions.InternalErrorException;
 import com.github.veloproject.userservices.shared.exceptions.InvalidParameterException;
-import com.github.veloproject.userservices.shared.file_managers.ImageService;
+import com.github.veloproject.userservices.shared.files.ImageService;
 import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
