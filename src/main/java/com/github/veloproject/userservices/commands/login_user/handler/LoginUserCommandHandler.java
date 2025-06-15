@@ -4,6 +4,7 @@ import com.github.veloproject.userservices.commands.login_user.LoginUserCommand;
 import com.github.veloproject.userservices.commands.login_user.LoginUserCommandResult;
 import com.github.veloproject.userservices.mediators.contracts.handlers.NoAuthRequestHandler;
 import com.github.veloproject.userservices.persistence.repositories.UserRepository;
+import com.github.veloproject.userservices.shared.emails.EmailService;
 import com.github.veloproject.userservices.shared.exceptions.IncorrectInformationsProvided;
 import com.github.veloproject.userservices.shared.exceptions.InvalidParameterException;
 import com.github.veloproject.userservices.shared.utils.CryptographyUtils;
@@ -17,11 +18,14 @@ import java.time.Duration;
 public class LoginUserCommandHandler extends NoAuthRequestHandler<LoginUserCommand, LoginUserCommandResult> {
     private final UserRepository repository;
     private final StringRedisTemplate redisTemplate;
+    private final EmailService emailService;
 
     public LoginUserCommandHandler(UserRepository repository,
-                                   StringRedisTemplate redisTemplate) {
+                                   StringRedisTemplate redisTemplate,
+                                   EmailService emailService) {
         this.repository = repository;
         this.redisTemplate = redisTemplate;
+        this.emailService = emailService;
     }
 
     @Override
@@ -47,6 +51,11 @@ public class LoginUserCommandHandler extends NoAuthRequestHandler<LoginUserComma
     private String generate2FACodeAndReturnsKey(String userEmail) {
         String code = String
                 .format("%06d", new SecureRandom().nextInt(999999));
+        emailService.sendSimpleMail(
+                userEmail,
+                "Código de autenticação de dois fatores",
+                code
+        );
         String key = "2fa:" + userEmail;
         redisTemplate
                 .opsForValue()
