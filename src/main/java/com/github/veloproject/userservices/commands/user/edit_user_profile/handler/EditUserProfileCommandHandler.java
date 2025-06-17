@@ -45,12 +45,13 @@ public class EditUserProfileCommandHandler extends AuthRequestHandler<EditUserPr
                 validateNickname(fieldValue);
                 user.setNickname(fieldValue);
             }
-            default -> throw new InvalidParameterException("Field '" + field + "' is not supported to update.");
+            default -> throw new InvalidParameterException("Field '" + field + "' is not supported to update on this method.");
         }
 
         repository.save(user);
     }
 
+    // TODO Filtrar por usuários não deletados.
     private void validateNickname(String fieldValue) {
         String regex = "^[a-zA-Z0-9._]{2,20}$";
         if (repository.existsByNickname(fieldValue)) throw new AlreadyExistsException("Nickname already registered.");

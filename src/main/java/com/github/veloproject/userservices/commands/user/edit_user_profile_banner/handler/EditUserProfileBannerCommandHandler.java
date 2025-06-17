@@ -26,7 +26,7 @@ public class EditUserProfileBannerCommandHandler
         this.imageService = imageService;
     }
 
-    // TODO Melhorias na legibilidade do código, alteração no tamanho da imagem.
+    // TODO Alteração no tamanho da imagem.
     @Override
     @Transactional
     public EditUserProfileBannerCommandResult handle(EditUserProfileBannerCommand request,
@@ -34,7 +34,8 @@ public class EditUserProfileBannerCommandHandler
         if (request.getFile() == null || request.getFile().isEmpty()) throw new InvalidParameterException("Image must be uploaded.");
         else if (token == null) throw new InvalidBearerTokenException("Bearer Token must be specified.");
 
-        var fileName = request.getFile().getOriginalFilename();
+        var fileName = request.getFile()
+                .getOriginalFilename();
         if (fileName == null) {
             throw new InvalidParameterException("File name must be specified.");
         }
@@ -45,14 +46,17 @@ public class EditUserProfileBannerCommandHandler
                     request.getFile(),
                     "banner.png",
                     user.getId());
+
             user.setBannerPhotoUrl(path);
+            repository.save(user);
         } catch (IOException e) {
             throw new InternalErrorException("Error while reading image.");
         }
 
         return new EditUserProfileBannerCommandResult(
                 200,
-                "Banner updated."
+                "Banner updated.",
+                user.getBannerPhotoUrl()
         );
     }
 }

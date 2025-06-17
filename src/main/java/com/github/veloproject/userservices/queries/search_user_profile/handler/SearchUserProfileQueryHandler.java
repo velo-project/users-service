@@ -8,6 +8,7 @@ import com.github.veloproject.userservices.shared.exceptions.InvalidParameterExc
 import com.github.veloproject.userservices.shared.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
+// TODO Criar DTO Seguro de Usuário.
 @Service
 public class SearchUserProfileQueryHandler extends NoAuthRequestHandler<SearchUserProfileQuery, SearchUserProfileQueryResult> {
     private final UserRepository repository;

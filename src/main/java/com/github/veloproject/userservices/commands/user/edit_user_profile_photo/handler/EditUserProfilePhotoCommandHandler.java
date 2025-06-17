@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
-// TODO Melhorias na legibilidade do código, alteração no tamanho da imagem.
+// TODO Alteração no tamanho da imagem.
 @Service
 public class EditUserProfilePhotoCommandHandler
         extends AuthRequestHandler<EditUserProfilePhotoCommand, EditUserProfilePhotoCommandResult> {
@@ -33,7 +33,8 @@ public class EditUserProfilePhotoCommandHandler
         if (request.getFile() == null || request.getFile().isEmpty()) throw new InvalidParameterException("Image must be uploaded.");
         else if (token == null) throw new InvalidBearerTokenException("Bearer Token must be specified.");
 
-        var fileName = request.getFile().getOriginalFilename();
+        var fileName = request.getFile()
+                .getOriginalFilename();
         if (fileName == null) {
             throw new InvalidParameterException("File name must be specified.");
         }
@@ -45,13 +46,15 @@ public class EditUserProfilePhotoCommandHandler
                     "profile_photo.png",
                     user.getId());
             user.setProfilePhotoUrl(path);
+            repository.save(user);
         } catch (IOException e) {
             throw new InternalErrorException("Error while reading image.");
         }
 
         return new EditUserProfilePhotoCommandResult(
                 200,
-                "Profile photo uploaded."
+                "Profile photo uploaded.",
+                user.getProfilePhotoUrl()
         );
     }
 }
