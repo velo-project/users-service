@@ -1,10 +1,10 @@
 package com.github.veloproject.userservices.shared.utils;
 
-import org.springframework.stereotype.Service;
+import lombok.experimental.UtilityClass;
 
 import java.util.UUID;
 
-@Service
+@UtilityClass
 public class UserUtils {
     public static String generateDeletedUserNickname() {
         String uuid = UUID.randomUUID().toString().replace("-", "");
