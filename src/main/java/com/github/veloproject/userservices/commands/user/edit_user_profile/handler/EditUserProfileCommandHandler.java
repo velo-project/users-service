@@ -51,7 +51,6 @@ public class EditUserProfileCommandHandler extends AuthRequestHandler<EditUserPr
         repository.save(user);
     }
 
-    // TODO Filtrar por usuários não deletados.
     private void validateNickname(String fieldValue) {
         String regex = "^[a-zA-Z0-9._]{2,20}$";
         if (repository.existsByNickname(fieldValue)) throw new AlreadyExistsException("Nickname already registered.");
