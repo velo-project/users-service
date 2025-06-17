@@ -55,8 +55,7 @@ public class EditUserProfileBannerCommandHandler
 
         return new EditUserProfileBannerCommandResult(
                 200,
-                "Banner updated.",
-                user.getBannerPhotoUrl()
+                "Banner updated."
         );
     }
 }

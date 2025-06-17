@@ -53,8 +53,7 @@ public class EditUserProfilePhotoCommandHandler
 
         return new EditUserProfilePhotoCommandResult(
                 200,
-                "Profile photo uploaded.",
-                user.getProfilePhotoUrl()
+                "Profile photo uploaded."
         );
     }
 }
