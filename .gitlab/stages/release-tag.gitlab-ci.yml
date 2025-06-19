@@ -4,7 +4,7 @@ generate-release-tag:
     - primary-build
     - run-unit-tests
   tags:
-    - windows  # ou o nome da tag que seu runner usa
+    - pr-matrix
   script:
     - git config user.name "Velo Bot"
     - git config user.email "velo.noreply@gmail.com"
