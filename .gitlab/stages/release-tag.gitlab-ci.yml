@@ -8,12 +8,10 @@ generate-release-tag:
   script:
     - git config user.name "Velo Bot"
     - git config user.email "velo.noreply@gmail.com"
-    - git remote set-url origin "https://velo-bot:$env:GITLAB_TOKEN@gitlab.com/velo-company/services/users-service.git"
+    - git remote set-url origin "https://velo-bot:glpat-TPFjnVXq4-RWEUVxVp84@gitlab.com/velo-company/services/users-service.git"
     - $tag = "1.$env:CI_JOB_ID"
     - git tag $tag
     - git push origin $tag
-  variables:
-    GITLAB_TOKEN: "glpat-TPFjnVXq4-RWEUVxVp84"
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
       when: always
