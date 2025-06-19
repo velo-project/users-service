@@ -5,6 +5,6 @@ run-unit-tests:
   script:
     - gradle test
   tags:
-    - sao-caetano-matrix
+    - pr-matrix
   only:
     - main
