@@ -7,4 +7,5 @@ run-unit-tests:
   tags:
     - pr-matrix
   only:
+    - develop
     - main
