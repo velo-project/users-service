@@ -13,10 +13,20 @@ spring:
           starttls:
             enable: true
             required: true
+
   servlet:
     multipart:
       max-file-size: 20MB
       max-request-size: 20MB
+
+  data:
+    redis:
+      host: ${REDIS_DATABASE_HOST}
+      port: 6379
+      username: ${REDIS_DATABASE_USERNAME}
+      password: ${REDIS_DATABASE_PASSWORD}
+      database: 0
+
   datasource:
     url: jdbc:postgresql://${DATABASE_URL}
     username: ${DATABASE_USERNAME}
