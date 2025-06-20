@@ -39,3 +39,7 @@ out/
 # Security
 app.key
 app.pub
+
+# Environment
+.env*
+!.env.example
