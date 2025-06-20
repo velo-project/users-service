@@ -3,65 +3,64 @@ package com.github.veloproject.userservices.commands.login_user.handler;
 import com.github.veloproject.userservices.commands.login_user.LoginUserCommand;
 import com.github.veloproject.userservices.commands.login_user.LoginUserCommandResult;
 import com.github.veloproject.userservices.mediators.contracts.handlers.NoAuthRequestHandler;
-import com.github.veloproject.userservices.persistence.entities.RoleEntity;
-import com.github.veloproject.userservices.persistence.entities.UserEntity;
 import com.github.veloproject.userservices.persistence.repositories.UserRepository;
+import com.github.veloproject.userservices.shared.emails.EmailService;
 import com.github.veloproject.userservices.shared.exceptions.IncorrectInformationsProvided;
+import com.github.veloproject.userservices.shared.exceptions.InvalidParameterException;
 import com.github.veloproject.userservices.shared.utils.CryptographyUtils;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.util.stream.Collectors;
+import java.security.SecureRandom;
+import java.time.Duration;
 
 @Service
 public class LoginUserCommandHandler extends NoAuthRequestHandler<LoginUserCommand, LoginUserCommandResult> {
-    private final JwtEncoder jwtEncoder;
     private final UserRepository repository;
+    private final StringRedisTemplate redisTemplate;
+    private final EmailService emailService;
 
-    public LoginUserCommandHandler(UserRepository repository, JwtEncoder jwtEncoder) {
+    public LoginUserCommandHandler(UserRepository repository,
+                                   StringRedisTemplate redisTemplate,
+                                   EmailService emailService) {
         this.repository = repository;
-        this.jwtEncoder = jwtEncoder;
+        this.redisTemplate = redisTemplate;
+        this.emailService = emailService;
     }
 
     @Override
     public LoginUserCommandResult handle(LoginUserCommand request) {
         if (request.getEmail() == null || request.getEmail().isEmpty()
                 || request.getPassword() == null || request.getPassword().isEmpty())
-            throw new IncorrectInformationsProvided();
+            throw new InvalidParameterException("Email and password are required.");
 
         var user = repository.getByEmail(request.getEmail())
+                .filter(u -> !u.getIsDeleted())
                 .filter(u -> CryptographyUtils.compare(request.getPassword(), u.getPassword()))
                 .orElseThrow(IncorrectInformationsProvided::new);
 
-        Long expiresIn = 500L;
-        var jwtValue = generateJwt(user, expiresIn);
+        String key = generate2FACodeAndReturnsKey(user.getEmail());
 
         return new LoginUserCommandResult(
                 200,
-                "Logged in.",
-                jwtValue,
-                expiresIn
+                "Waiting for confirmation.",
+                key
         );
     }
 
-    private String generateJwt(UserEntity user, Long expiresIn) {
-        var now = Instant.now();
-        var scopes = user.getRoles()
-                .stream()
-                .map(RoleEntity::getName)
-                .collect(Collectors.joining(" "));
+    private String generate2FACodeAndReturnsKey(String userEmail) {
+        String code = String
+                .format("%06d", new SecureRandom().nextInt(999999));
+        emailService.sendSimpleMail(
+                userEmail,
+                "Código de autenticação de dois fatores",
+                code
+        );
+        String key = "2fa:" + userEmail;
+        redisTemplate
+                .opsForValue()
+                .set(key, code, Duration.ofMinutes(5));
 
-        var claims = JwtClaimsSet.builder()
-                .issuer("velo-user-services")
-                .subject(user.getId().toString())
-                .issuedAt(now)
-                .claim("scope", scopes)
-                .expiresAt(now.plusSeconds(expiresIn))
-                .build();
-
-        return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+        return key;
     }
 }

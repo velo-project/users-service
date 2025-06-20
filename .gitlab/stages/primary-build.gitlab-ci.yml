@@ -4,4 +4,5 @@ primary-build:
   tags:
     - pr-matrix
   only:
+    - develop
     - main

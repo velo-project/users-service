@@ -8,6 +8,7 @@ import com.github.veloproject.userservices.shared.exceptions.InvalidParameterExc
 import com.github.veloproject.userservices.shared.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
+// TODO Criar DTO Seguro de Usuário.
 @Service
 public class SearchUserProfileQueryHandler extends NoAuthRequestHandler<SearchUserProfileQuery, SearchUserProfileQueryResult> {
     private final UserRepository repository;
@@ -21,6 +22,7 @@ public class SearchUserProfileQueryHandler extends NoAuthRequestHandler<SearchUs
         if (request.getNickname() == null) throw new InvalidParameterException("Nickname must be specified.");
 
         var user = repository.getByNickname(request.getNickname())
+                .filter(u -> !u.getIsDeleted())
                 .orElseThrow(() -> new NotFoundException(request.getNickname()));
 
         return new SearchUserProfileQueryResult(

@@ -8,6 +8,7 @@ import com.github.veloproject.userservices.shared.exceptions.IncorrectInformatio
 import com.github.veloproject.userservices.shared.exceptions.InvalidParameterException;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UnblockUserCommandHandler
@@ -19,6 +20,7 @@ public class UnblockUserCommandHandler
     }
 
     @Override
+    @Transactional
     public UnblockUserCommandResult handle(UnblockUserCommand request, JwtAuthenticationToken token) {
         if (request.getNickname() == null) throw new InvalidParameterException("Nickname must be specified.");
 

@@ -6,14 +6,15 @@ import com.github.veloproject.userservices.mediators.contracts.handlers.AuthRequ
 import com.github.veloproject.userservices.persistence.repositories.UserRepository;
 import com.github.veloproject.userservices.shared.exceptions.InternalErrorException;
 import com.github.veloproject.userservices.shared.exceptions.InvalidParameterException;
-import com.github.veloproject.userservices.shared.file_managers.ImageService;
+import com.github.veloproject.userservices.shared.files.ImageService;
 import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
-// TODO Melhorias na legibilidade do código, alteração no tamanho da imagem.
+// TODO Alteração no tamanho da imagem.
 @Service
 public class EditUserProfilePhotoCommandHandler
         extends AuthRequestHandler<EditUserProfilePhotoCommand, EditUserProfilePhotoCommandResult> {
@@ -26,12 +27,14 @@ public class EditUserProfilePhotoCommandHandler
         this.imageService = imageService;
     }
     @Override
+    @Transactional
     public EditUserProfilePhotoCommandResult handle(EditUserProfilePhotoCommand request,
                                                     JwtAuthenticationToken token) {
         if (request.getFile() == null || request.getFile().isEmpty()) throw new InvalidParameterException("Image must be uploaded.");
         else if (token == null) throw new InvalidBearerTokenException("Bearer Token must be specified.");
 
-        var fileName = request.getFile().getOriginalFilename();
+        var fileName = request.getFile()
+                .getOriginalFilename();
         if (fileName == null) {
             throw new InvalidParameterException("File name must be specified.");
         }
@@ -43,6 +46,7 @@ public class EditUserProfilePhotoCommandHandler
                     "profile_photo.png",
                     user.getId());
             user.setProfilePhotoUrl(path);
+            repository.save(user);
         } catch (IOException e) {
             throw new InternalErrorException("Error while reading image.");
         }

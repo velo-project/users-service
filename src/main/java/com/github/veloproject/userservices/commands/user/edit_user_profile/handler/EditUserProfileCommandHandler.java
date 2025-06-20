@@ -45,7 +45,7 @@ public class EditUserProfileCommandHandler extends AuthRequestHandler<EditUserPr
                 validateNickname(fieldValue);
                 user.setNickname(fieldValue);
             }
-            default -> throw new InvalidParameterException("Field '" + field + "' is not supported to update.");
+            default -> throw new InvalidParameterException("Field '" + field + "' is not supported to update on this method.");
         }
 
         repository.save(user);

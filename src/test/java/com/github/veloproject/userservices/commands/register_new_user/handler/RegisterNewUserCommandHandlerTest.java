@@ -7,7 +7,6 @@ import com.github.veloproject.userservices.persistence.repositories.RoleReposito
 import com.github.veloproject.userservices.persistence.repositories.UserRepository;
 import com.github.veloproject.userservices.shared.exceptions.InvalidParameterException;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -4,18 +4,19 @@ import com.github.veloproject.userservices.commands.login_user.LoginUserCommand;
 import com.github.veloproject.userservices.persistence.entities.RoleEntity;
 import com.github.veloproject.userservices.persistence.entities.UserEntity;
 import com.github.veloproject.userservices.persistence.repositories.UserRepository;
+import com.github.veloproject.userservices.shared.emails.EmailService;
 import com.github.veloproject.userservices.shared.exceptions.IncorrectInformationsProvided;
 import com.github.veloproject.userservices.shared.utils.CryptographyUtils;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 
+import java.time.Duration;
 import java.util.Optional;
 import java.util.Set;
 
@@ -24,22 +25,23 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class LoginUserCommandHandlerTest {
     @Mock
-    JwtEncoder jwtEncoder;
+    UserRepository userRepository;
 
     @Mock
-    UserRepository userRepository;
+    StringRedisTemplate redisTemplate;
+
+    @Mock
+    EmailService emailService;
+
+    @Mock
+    ValueOperations<String, String> valueOperations;
 
     LoginUserCommandHandler handler;
 
     @BeforeEach
     void beforeEach() {
-        handler = new LoginUserCommandHandler(userRepository, jwtEncoder);
-    }
-
-    @AfterEach
-    void afterEach() {
-        Mockito.reset(userRepository);
-        Mockito.reset(jwtEncoder);
+        handler = new LoginUserCommandHandler(userRepository, redisTemplate, emailService);
+        Mockito.lenient().when(redisTemplate.opsForValue()).thenReturn(valueOperations);
     }
 
     @Test
@@ -55,6 +57,8 @@ class LoginUserCommandHandlerTest {
                 command.getEmail(),
                 CryptographyUtils.encrypt(command.getPassword())
         );
+        user.setIsDeleted(false);
+        user.setIsBlocked(false);
         user.setId(1);
 
         var role = new RoleEntity();
@@ -64,42 +68,35 @@ class LoginUserCommandHandlerTest {
 
         user.setRoles(roles);
 
-        var jwt = Jwt.withTokenValue("mock-token")
-                .header("alg", "HS256")
-                .claim("sub", "1")
-                .build();
-
-        Mockito.when(jwtEncoder.encode(Mockito.any())).thenReturn(jwt);
         Mockito.when(userRepository.getByEmail(command.getEmail())).thenReturn(Optional.of(user));
 
-        // Act
+        Mockito.doNothing().when(valueOperations).set(
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.any(Duration.class)
+        );
+
+        Mockito.doNothing().when(emailService).sendSimpleMail(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
+
         var result = handler.handle(command);
 
         // Assert
         assertEquals(200, result.getStatusCode());
-        assertEquals("Logged in.", result.getMessage());
-        assertEquals(500L, result.getExpiresIn());
+        assertEquals("Waiting for confirmation.", result.getMessage());
+
+        Mockito.verify(emailService).sendSimpleMail(Mockito.eq(user.getEmail()), Mockito.anyString(), Mockito.anyString());
+        Mockito.verify(valueOperations).set(Mockito.anyString(), Mockito.anyString(), Mockito.any(Duration.class));
     }
 
     @Test
     void shouldFailBecauseWrongInformationsProvided() {
-        // Arrange
         var command = new LoginUserCommand();
         command.setEmail("johndoe@email.com");
         command.setPassword("12345678");
 
-        var jwt = Jwt.withTokenValue("mock-token")
-                .header("alg", "HS256")
-                .claim("sub", "1")
-                .build();
-
-        Mockito.when(jwtEncoder.encode(Mockito.any())).thenReturn(jwt);
         Mockito.when(userRepository.getByEmail(command.getEmail())).thenReturn(Optional.empty());
 
-        // Act
-        var result = assertThrows(IncorrectInformationsProvided.class, () ->handler.handle(command));
-
-        // Assert
-        assertEquals("Error while handling request: Incorrect informations provided.", result.getMessage());
+        var exception = assertThrows(IncorrectInformationsProvided.class, () -> handler.handle(command));
+        assertEquals("Error while handling request: Incorrect informations provided.", exception.getMessage());
     }
 }
