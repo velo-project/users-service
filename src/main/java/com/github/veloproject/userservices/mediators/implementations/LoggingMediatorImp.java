@@ -50,38 +50,30 @@ public class LoggingMediatorImp implements Mediator {
             throw new NoSuchBeanDefinitionException(handlerBeanName);
         }
 
-        try {
-            Object handler = appContext.getBean(handlerBeanName);
-            log.info("{}: Using handler '{}'.", className, handlerBeanName);
+        Object handler = appContext.getBean(handlerBeanName);
+        log.info("{}: Using handler '{}'.", className, handlerBeanName);
 
-            if (!(handler instanceof RequestHandler<?, ?> baseHandler)) {
-                log.error("{}: Invalid handler type.", className);
-                throw new IllegalStateException("Handler does not implement RequestHandler.");
+        if (!(handler instanceof RequestHandler<?, ?> baseHandler)) {
+            log.error("{}: Invalid handler type.", className);
+            throw new IllegalStateException("Handler does not implement RequestHandler.");
+        }
+
+        return switch (baseHandler.getHandlerAuthType()) {
+            case AUTHENTICATION -> {
+                if (token == null) {
+                    log.error("{}: Authenticated request but token is null.", className);
+                    throw new InvalidBearerTokenException("Missing Bearer token.");
+                }
+                @SuppressWarnings("unchecked") var typed = (AuthRequestHandler<TRequest, TResponse>) handler;
+                yield handleWithLogs(className, () -> typed.handle(request, token));
             }
 
-            return switch (baseHandler.getHandlerAuthType()) {
-                case AUTHENTICATION -> {
-                    if (token == null) {
-                        log.error("{}: Authenticated request but token is null.", className);
-                        throw new InvalidBearerTokenException("Missing Bearer token.");
-                    }
-                    @SuppressWarnings("unchecked")
-                    var typed = (AuthRequestHandler<TRequest, TResponse>) handler;
-                    yield handleWithLogs(className, () -> typed.handle(request, token));
-                }
-
-                case NO_AUTHENTICATION -> {
-                    @SuppressWarnings("unchecked")
-                    var typed = (NoAuthRequestHandler<TRequest, TResponse>) handler;
+            case NO_AUTHENTICATION -> {
+                    @SuppressWarnings("unchecked") var typed = (NoAuthRequestHandler<TRequest, TResponse>) handler;
                     yield handleWithLogs(className, () -> typed.handle(request));
                 }
             };
-
-        } catch (Exception e) {
-            log.error("{}: Exception occurred - {}", className, e.getMessage(), e);
-            throw e;
         }
-    }
 
     private <T> T handleWithLogs(String className,
                                  Supplier<T> handlerAction) {
