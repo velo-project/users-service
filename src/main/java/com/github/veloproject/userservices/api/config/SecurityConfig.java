@@ -12,6 +12,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -54,18 +55,20 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH,
                                 "/api/user_services/edit_profile",
                                 "/api/user_services/edit_banner",
-                                "/api/user_services/edit_photo",
+                                "/api/user_services/edit_photo")
+                        .hasAuthority("SCOPE_USER")
+
+                        .requestMatchers(HttpMethod.PATCH,
                                 "/api/user_services/admin/block",
-                                "/api/user_services/admin/unblock")
-                        .permitAll()
+                                "/api/user_services/admin/unblock"
+                        ).hasAuthority("SCOPE_ADMIN")
 
                         .requestMatchers(HttpMethod.DELETE,
                                 "/api/user_services/admin/delete")
-                        .permitAll()
+                        .hasAuthority("SCOPE_ADMIN")
 
-                    .anyRequest().authenticated())
-                .csrf(csrf -> csrf
-                        .disable()) // disable in prod
+                        .anyRequest().authenticated())
+                .csrf(AbstractHttpConfigurer::disable)
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(Customizer.withDefaults()))
                 .sessionManagement(session -> session
