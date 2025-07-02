@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.security.SecureRandom;
 import java.time.Duration;
 
+// TODO Usar @Valid e Exception Handler nos parâmetros
 @Service
 public class LoginUserCommandHandler extends NoAuthRequestHandler<LoginUserCommand, LoginUserCommandResult> {
     private final UserRepository repository;
