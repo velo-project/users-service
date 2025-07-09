@@ -1,7 +1,7 @@
 package com.github.veloproject.userservices.shared.exceptions;
 
-public class InvalidFileType extends RuntimeException {
-    public InvalidFileType(String message) {
+public class InvalidFileTypeException extends RuntimeException {
+    public InvalidFileTypeException(String message) {
         super(message);
     }
 }
