@@ -4,7 +4,7 @@ import com.github.veloproject.userservices.commands.admin.unblock_user.UnblockUs
 import com.github.veloproject.userservices.commands.admin.unblock_user.UnblockUserCommandResult;
 import com.github.veloproject.userservices.mediators.contracts.handlers.AuthRequestHandler;
 import com.github.veloproject.userservices.persistence.repositories.UserRepository;
-import com.github.veloproject.userservices.shared.exceptions.IncorrectInformationsProvided;
+import com.github.veloproject.userservices.shared.exceptions.IncorrectInformationsProvidedException;
 import com.github.veloproject.userservices.shared.exceptions.InvalidParameterException;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class UnblockUserCommandHandler
 
         var user = repository
                 .getByNickname(request.getNickname())
-                .orElseThrow(IncorrectInformationsProvided::new);
+                .orElseThrow(IncorrectInformationsProvidedException::new);
         user.setIsBlocked(false);
         repository.save(user);
 

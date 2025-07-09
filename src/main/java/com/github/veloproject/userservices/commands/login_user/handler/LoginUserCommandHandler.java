@@ -5,7 +5,7 @@ import com.github.veloproject.userservices.commands.login_user.LoginUserCommandR
 import com.github.veloproject.userservices.mediators.contracts.handlers.NoAuthRequestHandler;
 import com.github.veloproject.userservices.persistence.repositories.UserRepository;
 import com.github.veloproject.userservices.shared.emails.EmailService;
-import com.github.veloproject.userservices.shared.exceptions.IncorrectInformationsProvided;
+import com.github.veloproject.userservices.shared.exceptions.IncorrectInformationsProvidedException;
 import com.github.veloproject.userservices.shared.exceptions.InvalidParameterException;
 import com.github.veloproject.userservices.shared.utils.CryptographyUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -38,7 +38,7 @@ public class LoginUserCommandHandler extends NoAuthRequestHandler<LoginUserComma
         var user = repository.getByEmail(request.getEmail())
                 .filter(u -> !u.getIsDeleted())
                 .filter(u -> CryptographyUtils.compare(request.getPassword(), u.getPassword()))
-                .orElseThrow(IncorrectInformationsProvided::new);
+                .orElseThrow(IncorrectInformationsProvidedException::new);
 
         String key = generate2FACodeAndReturnsKey(user.getEmail());
 

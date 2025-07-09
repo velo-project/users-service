@@ -5,7 +5,7 @@ import com.github.veloproject.userservices.persistence.entities.RoleEntity;
 import com.github.veloproject.userservices.persistence.entities.UserEntity;
 import com.github.veloproject.userservices.persistence.repositories.UserRepository;
 import com.github.veloproject.userservices.shared.emails.EmailService;
-import com.github.veloproject.userservices.shared.exceptions.IncorrectInformationsProvided;
+import com.github.veloproject.userservices.shared.exceptions.IncorrectInformationsProvidedException;
 import com.github.veloproject.userservices.shared.utils.CryptographyUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -96,7 +96,7 @@ class LoginUserCommandHandlerTest {
 
         Mockito.when(userRepository.getByEmail(command.getEmail())).thenReturn(Optional.empty());
 
-        var exception = assertThrows(IncorrectInformationsProvided.class, () -> handler.handle(command));
+        var exception = assertThrows(IncorrectInformationsProvidedException.class, () -> handler.handle(command));
         assertEquals("Error while handling request: Incorrect informations provided.", exception.getMessage());
     }
 }

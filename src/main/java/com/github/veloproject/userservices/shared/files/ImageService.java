@@ -1,6 +1,6 @@
 package com.github.veloproject.userservices.shared.files;
 
-import com.github.veloproject.userservices.shared.exceptions.InvalidFileType;
+import com.github.veloproject.userservices.shared.exceptions.InvalidFileTypeException;
 import com.github.veloproject.userservices.shared.exceptions.InvalidParameterException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class ImageService {
     public String uploadImage(MultipartFile file,
                               String fileFinalName,
                               Integer userId)
-            throws IOException, InvalidFileType, InvalidParameterException {
+            throws IOException, InvalidFileTypeException, InvalidParameterException {
         if (fileFinalName == null || fileFinalName.isEmpty()) {
             throw new InvalidParameterException("Final name must be specified.");
         }
@@ -37,7 +37,7 @@ public class ImageService {
         else if (!fileName.endsWith(".jpg")
                 && !fileName.endsWith(".jpeg")
                 && !fileName.endsWith(".png")) {
-            throw new InvalidFileType("Image must be jpg, jpeg or png.");
+            throw new InvalidFileTypeException("Image must be jpg, jpeg or png.");
         }
 
         var now = LocalDateTime.now();

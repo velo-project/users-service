@@ -6,7 +6,7 @@ import com.github.veloproject.userservices.mediators.contracts.handlers.NoAuthRe
 import com.github.veloproject.userservices.persistence.entities.RoleEntity;
 import com.github.veloproject.userservices.persistence.entities.UserEntity;
 import com.github.veloproject.userservices.persistence.repositories.UserRepository;
-import com.github.veloproject.userservices.shared.exceptions.IncorrectInformationsProvided;
+import com.github.veloproject.userservices.shared.exceptions.IncorrectInformationsProvidedException;
 import com.github.veloproject.userservices.shared.exceptions.InvalidParameterException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -40,13 +40,13 @@ public class LoginUser2FACommandHandler
             throw new InvalidParameterException("Invalid key format.");
         }
         if (!validate2FACode(request.getKey(), request.getCode())) {
-            throw new IncorrectInformationsProvided();
+            throw new IncorrectInformationsProvidedException();
         }
 
         String email = request.getKey().substring(4);
         var user = repository.getByEmail(email)
                 .filter(u -> !u.getIsDeleted())
-                .orElseThrow(IncorrectInformationsProvided::new);
+                .orElseThrow(IncorrectInformationsProvidedException::new);
         var expiresIn = 500L;
         String token = generateJwt(user, expiresIn);
 
