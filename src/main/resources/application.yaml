@@ -20,6 +20,16 @@ spring:
     username: ${RABBITMQ_USERNAME}
     password: ${RABBITMQ_PASSWORD}
 
+    listener:
+      simple:
+        acknowledge-mode: manual
+    queues:
+      user-block-queue:
+        arguments:
+          x-dead-letter-exchange: dead-letter-exchange
+          x-dead-letter-routing-key: dead-letter-routing-key
+
+
   servlet:
     multipart:
       max-file-size: 20MB
