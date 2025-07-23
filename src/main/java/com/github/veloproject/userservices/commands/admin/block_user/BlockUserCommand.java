@@ -9,6 +9,7 @@ import lombok.Setter;
 public class BlockUserCommand implements Request<BlockUserCommandResult> {
     private String nickname;
 
+    public BlockUserCommand() {}
     public BlockUserCommand(String nickname) {
         this.nickname = nickname;
     }
