@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.4'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.github.velo-project.presentations'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    //implementation project(':domain')
+    //implementation project(':infrastructure')
+    implementation project(':application')
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+// TODO: Refactor to Environments value
+flyway {
+    url = 'jdbc:postgresql://localhost:5432/user_services'
+    user = 'postgres'
+    password = 'root'
+    locations = ['filesystem:src/main/resources/db/migration']
+}
