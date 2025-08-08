@@ -2,6 +2,7 @@ package com.github.veloproject.infrastructure.services;
 
 import com.github.veloproject.application.abstractions.services.IImageFileService;
 import com.github.veloproject.infrastructure.services.exceptions.InvalidFileTypeException;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -10,6 +11,7 @@ import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Service
 public class ImageFileService implements IImageFileService {
     @Override
     public String uploadImage(MultipartFile file, Integer userId) throws IOException {
