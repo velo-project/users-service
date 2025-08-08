@@ -1,6 +1,5 @@
 rootProject.name = 'UserServices'
 include 'infrastructure'
-include 'infrastructure'
 include 'application'
 include 'domain'
 
