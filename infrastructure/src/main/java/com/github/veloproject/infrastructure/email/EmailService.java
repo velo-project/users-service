@@ -1,7 +1,7 @@
-package com.github.veloproject.infrastructure.services;
+package com.github.veloproject.infrastructure.email;
 
 import com.github.veloproject.application.abstractions.services.IEmailService;
-import com.github.veloproject.infrastructure.services.exceptions.EmailSendingErrorException;
+import com.github.veloproject.infrastructure.email.exceptions.EmailSendingErrorException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
