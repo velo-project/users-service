@@ -1,5 +1,6 @@
 package com.github.veloproject.application.commands.auth.login.handler;
 
+import com.github.veloproject.application.abstractions.cache.IMemoryCache;
 import com.github.veloproject.application.abstractions.repositories.IUserRepository;
 import com.github.veloproject.application.abstractions.services.IEmailService;
 import com.github.veloproject.application.commands.auth.login.LoginUserCommand;
@@ -8,16 +9,19 @@ import com.github.veloproject.application.mediators.contracts.handlers.NoAuthReq
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.time.Duration;
 import java.util.UUID;
 
 @Service
 public class LoginUserCommandHandler extends NoAuthRequestHandler<LoginUserCommand, LoginUserCommandResult> {
     private final IUserRepository repository;
     private final IEmailService email;
+    private final IMemoryCache cache;
 
-    public LoginUserCommandHandler(IUserRepository repository, IEmailService email) {
+    public LoginUserCommandHandler(IUserRepository repository, IEmailService email, IMemoryCache cache) {
         this.repository = repository;
         this.email = email;
+        this.cache = cache;
     }
 
     @Override
@@ -37,6 +41,7 @@ public class LoginUserCommandHandler extends NoAuthRequestHandler<LoginUserComma
         this.email.send(email, "Código de autenticação de dois fatores", code);
 
         var key = UUID.randomUUID().toString();
+        cache.save(key, code, Duration.ofMinutes(15));
 
         return key;
     }
