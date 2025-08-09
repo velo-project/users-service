@@ -4,8 +4,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${APP_MAIL_ADDRESS}
-    password: ${APP_MAIL_KEY}
+    username: ${GMAIL_ADDRESS}
+    password: ${GMAIL_SECRET_KEY}
     properties:
       mail:
         smtp:
@@ -15,10 +15,10 @@ spring:
             required: true
 
   rabbitmq:
-    host: ${RABBITMQ_HOST}
+    host: ${RABBITMQ_DEFAULT_HOST}
     port: 5672
-    username: ${RABBITMQ_USERNAME}
-    password: ${RABBITMQ_PASSWORD}
+    username: ${RABBITMQ_DEFAULT_USER}
+    password: ${RABBITMQ_DEFAULT_PASS}
 
     listener:
       simple:
@@ -38,21 +38,21 @@ spring:
   data:
     redis:
       host: ${REDIS_HOST}
-      port: 6379
+      port: ${REDIS_PORT}
       username: ${REDIS_USERNAME}
       password: ${REDIS_PASSWORD}
       database: 0
 
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST}
-    username: ${POSTGRES_USERNAME}
+    url: jdbc:postgresql://${POSTGRES_HOST}/${POSTGRES_DB}
+    username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
 jwt:
   public:
-    key: file:${PBKEY_PATH}
+    key: file:${RSA_PUBLIC_KEY}
   private:
-    key: file:${PVKEY_PATH}
+    key: file:${RSA_PRIVATE_KEY}
 app:
   image:
-    upload-dir: ${IMG_FILE_DIR}
+    upload-dir: ${IMAGE_FILE_DIR}

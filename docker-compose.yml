@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-  db:
+  pgsql:
     image: ankane/pgvector
-    container_name: pgvector
+    container_name: u_pgvector
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=root
@@ -12,23 +12,47 @@ services:
     expose:
       - "5432"
     networks:
-      - user_services
+      - user_services_internal
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: u_rabbitmq
+    ports:
+      - "5672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - user_services_internal
+
+  redis:
+    image: bitnami/redis:7.2
+    container_name: u_redis
+    expose:
+      - "6379"
+    environment:
+      - ALLOW_EMPTY_PASSWORD=no
+    volumes:
+      - redis_data:/bitnami/redis/data
+    networks:
+      - user_services_internal
 
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: user-services
+    container_name: u-app
     expose:
       - "8080"
     networks:
-      - user_services
+      - user_services_internal
     depends_on:
-      - db
+      - pgsql
+      - redis
+      - rabbitmq
 
   nginx:
     image: nginx:alpine
-    container_name: nginx-proxy
+    container_name: u_nginx
     ports:
       - "80:80"
     volumes:
@@ -36,11 +60,21 @@ services:
     depends_on:
       - app
     networks:
-      - user_services
+      - user_services_internal
+      - user_services_public
 
 networks:
-  user_services:
+  user_services_internal:
+    internal: true
+
+  user_services_public:
+    internal: false
     driver: bridge
 
 volumes:
+  redis_data:
+    driver: local
+  rabbitmq_data:
+    driver: local
   pgdata:
+    driver: local
