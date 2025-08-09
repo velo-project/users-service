@@ -1,0 +1,72 @@
+package com.github.veloproject.application.commands.auth.login_2fa.handler;
+
+import com.github.veloproject.application.abstractions.cache.IMemoryCache;
+import com.github.veloproject.application.abstractions.repositories.IUserRepository;
+import com.github.veloproject.application.commands.auth.login_2fa.LoginUser2FACommand;
+import com.github.veloproject.application.commands.auth.login_2fa.LoginUser2FACommandResult;
+import com.github.veloproject.application.dtos.TFACode;
+import com.github.veloproject.application.mediators.contracts.handlers.NoAuthRequestHandler;
+import com.github.veloproject.domain.entities.RoleEntity;
+import com.github.veloproject.domain.entities.UserEntity;
+import com.google.gson.Gson;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+
+import java.time.Instant;
+import java.util.stream.Collectors;
+
+public class LoginUser2FACommandHandler extends NoAuthRequestHandler<LoginUser2FACommand, LoginUser2FACommandResult> {
+    private final IUserRepository repository;
+    private final IMemoryCache cache;
+    private final JwtEncoder tokenEncoder;
+    private final Gson gson;
+
+    public LoginUser2FACommandHandler(IUserRepository repository, IMemoryCache cache, JwtEncoder tokenEncoder) {
+        this.repository = repository;
+        this.cache = cache;
+        this.tokenEncoder = tokenEncoder;
+        gson = new Gson();
+    }
+
+    @Override
+    public LoginUser2FACommandResult handle(LoginUser2FACommand request) {
+        var code = cache.get(request.getKey());
+        var isDeleted = cache.delete(request.getKey());
+
+        if (!isDeleted)
+            throw new RuntimeException();
+
+        var codeObject = gson.fromJson(code, TFACode.class);
+        var user = repository.findByEmail(codeObject.getEmail())
+                .orElseThrow(RuntimeException::new); // TODO
+        var token = generateJwt(user, 500L);
+
+        return new LoginUser2FACommandResult(
+                200,
+                "User sucessfully authenticated",
+                token,
+                500L
+        );
+    }
+
+    private String generateJwt(UserEntity user, Long expiresIn) {
+        var now = Instant.now();
+        var scopes = user.getRoles()
+                .stream()
+                .map(RoleEntity::getName)
+                .collect(Collectors.joining(" "));
+
+        var claims = JwtClaimsSet.builder()
+                .issuer("velo-user-services")
+                .subject(user.getId().toString())
+                .issuedAt(now)
+                .claim("scope", scopes)
+                .expiresAt(now.plusSeconds(expiresIn))
+                .build();
+
+        return tokenEncoder
+                .encode(JwtEncoderParameters.from(claims))
+                .getTokenValue();
+    }
+}

@@ -5,7 +5,12 @@ import com.github.veloproject.application.abstractions.repositories.IUserReposit
 import com.github.veloproject.application.abstractions.services.IEmailService;
 import com.github.veloproject.application.commands.auth.login.LoginUserCommand;
 import com.github.veloproject.application.commands.auth.login.LoginUserCommandResult;
+import com.github.veloproject.application.dtos.TFACode;
 import com.github.veloproject.application.mediators.contracts.handlers.NoAuthRequestHandler;
+import com.google.gson.Gson;
+import lombok.Builder;
+import lombok.Getter;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -17,11 +22,13 @@ public class LoginUserCommandHandler extends NoAuthRequestHandler<LoginUserComma
     private final IUserRepository repository;
     private final IEmailService email;
     private final IMemoryCache cache;
+    private final Gson gson;
 
     public LoginUserCommandHandler(IUserRepository repository, IEmailService email, IMemoryCache cache) {
         this.repository = repository;
         this.email = email;
         this.cache = cache;
+        gson = new Gson();
     }
 
     @Override
@@ -41,8 +48,14 @@ public class LoginUserCommandHandler extends NoAuthRequestHandler<LoginUserComma
         this.email.send(email, "Código de autenticação de dois fatores", code);
 
         var key = UUID.randomUUID().toString();
-        cache.save(key, code, Duration.ofMinutes(15));
+        var json = gson.toJson(TFACode.builder()
+                .code(code)
+                .email(email)
+                .build());
+
+        cache.save(key, json, Duration.ofMinutes(15));
 
         return key;
     }
 }
+

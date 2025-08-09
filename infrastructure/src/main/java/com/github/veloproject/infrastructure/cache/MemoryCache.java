@@ -20,4 +20,22 @@ public class MemoryCache implements IMemoryCache {
         redisTemplate.opsForValue()
                 .set(code, value, duration);
     }
+
+    @Override
+    public String get(String code) {
+        return redisTemplate.opsForValue().get(code);
+
+    }
+
+    @Override
+    public boolean delete(String code) {
+        var value = get(code);
+
+        if (value != null && !value.isEmpty()) {
+            redisTemplate.delete(code);
+            return true;
+        }
+
+        return false;
+    }
 }
