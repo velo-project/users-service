@@ -17,24 +17,24 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public Boolean existsByEmail(String email) {
-        return jpa.existsByEmail(email);
+        return jpa.existsByEmailAndIsBlockedFalse(email);
     }
 
     @Override
     public Boolean existsByNickname(String nickname) {
-        return jpa.existsByNickname(nickname);
+        return jpa.existsByNicknameAndIsBlockedFalse(nickname);
     }
 
     @Override
     public Optional<UserEntity> findByNickname(String nickname) {
-        var userTableRow = jpa.getByNickname(nickname);
+        var userTableRow = jpa.findByNicknameAndIsBlockedFalse(nickname);
 
         return userTableRow.map(UserMapper::toDomain);
     }
 
     @Override
     public Optional<UserEntity> findByEmail(String email) {
-        var userTableRow = jpa.getByEmail(email);
+        var userTableRow = jpa.findByEmailAndIsBlockedFalse(email);
 
         return userTableRow.map(UserMapper::toDomain);
     }
