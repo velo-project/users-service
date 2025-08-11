@@ -1,4 +1,4 @@
-package com.github.veloproject.infrastructure.repositories;
+package com.github.veloproject.infrastructure.mappers;
 
 import com.github.veloproject.domain.entities.RoleEntity;
 import com.github.veloproject.infrastructure.tables.RoleTable;
