@@ -2,6 +2,7 @@ package com.github.veloproject.infrastructure.repositories;
 
 import com.github.veloproject.application.abstractions.repositories.IUserRepository;
 import com.github.veloproject.domain.entities.UserEntity;
+import com.github.veloproject.infrastructure.mappers.UserMapper;
 import com.github.veloproject.infrastructure.repositories.jpa.IUserRepositoryJpa;
 import org.springframework.stereotype.Repository;
 
@@ -37,5 +38,14 @@ public class UserRepository implements IUserRepository {
         var userTableRow = jpa.findByEmailAndIsBlockedFalse(email);
 
         return userTableRow.map(UserMapper::toDomain);
+    }
+
+    @Override
+    public Integer save(UserEntity entity) {
+        var table = UserMapper.toPersistence(entity);
+
+        table = jpa.save(table);
+
+        return table.getId();
     }
 }
