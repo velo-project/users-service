@@ -4,18 +4,14 @@ WORKDIR /app
 
 COPY build.gradle settings.gradle ./
 COPY gradle ./gradle
-COPY src ./src
+COPY . .
 
-RUN gradle build -x test || true
-
-RUN gradle clean build -x test
+RUN gradle :presentations:build -x test
 
 FROM amazoncorretto:21
 
 WORKDIR /app
-
-COPY --from=builder /app/build/libs/*.jar app.jar
-
+COPY --from=builder /app/presentations/build/libs/*.jar app.jar
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-cp", "app.jar", "com.github.veloproject.presentations.Main"]

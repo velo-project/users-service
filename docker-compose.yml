@@ -1,24 +1,27 @@
-version: '3.8'
-
 services:
   pgsql:
     image: ankane/pgvector
     container_name: u_pgvector
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=root
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-    expose:
-      - "5432"
     networks:
       - user_services_internal
 
   rabbitmq:
     image: rabbitmq:3.13-management
     container_name: u_rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
     ports:
-      - "5672"
+      - "${RABBITMQ_PORT:-5672}:5672"
+      - "15672:15672"
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
     networks:
@@ -27,10 +30,12 @@ services:
   redis:
     image: bitnami/redis:7.2
     container_name: u_redis
-    expose:
-      - "6379"
     environment:
+      - REDIS_USERNAME=${REDIS_USERNAME}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
       - ALLOW_EMPTY_PASSWORD=no
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
     volumes:
       - redis_data:/bitnami/redis/data
     networks:
@@ -40,15 +45,33 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: u-app
+    container_name: u_app
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - RABBITMQ_DEFAULT_HOST=${RABBITMQ_DEFAULT_HOST}
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_USERNAME=${REDIS_USERNAME}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - GMAIL_ADDRESS=${GMAIL_ADDRESS}
+      - GMAIL_SECRET_KEY=${GMAIL_SECRET_KEY}
+      - IMAGE_FILE_DIR=${IMAGE_FILE_DIR}
+      - RSA_PRIVATE_KEY=${RSA_PRIVATE_KEY}
+      - RSA_PUBLIC_KEY=${RSA_PUBLIC_KEY}
     expose:
       - "8080"
     networks:
       - user_services_internal
     depends_on:
       - pgsql
-      - redis
       - rabbitmq
+      - redis
 
   nginx:
     image: nginx:alpine
@@ -68,13 +91,12 @@ networks:
     internal: true
 
   user_services_public:
-    internal: false
     driver: bridge
 
 volumes:
-  redis_data:
+  pgdata:
     driver: local
   rabbitmq_data:
     driver: local
-  pgdata:
+  redis_data:
     driver: local
