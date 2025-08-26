@@ -14,4 +14,4 @@ WORKDIR /app
 COPY --from=builder /app/presentations/build/libs/*.jar app.jar
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-cp", "app.jar", "com.github.veloproject.userservices.presentations.Main"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
