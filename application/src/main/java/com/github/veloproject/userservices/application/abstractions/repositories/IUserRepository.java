@@ -10,4 +10,5 @@ public interface IUserRepository {
     Optional<UserEntity> findByNickname(String nickname);
     Optional<UserEntity> findByEmail(String email);
     Integer save(UserEntity entity);
+    UserEntity getReferenceById(Integer id);
 }

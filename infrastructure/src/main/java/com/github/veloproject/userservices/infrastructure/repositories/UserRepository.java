@@ -48,4 +48,7 @@ public class UserRepository implements IUserRepository {
 
         return table.getId();
     }
+
+    @Override
+    public UserEntity getReferenceById(Integer id) { return UserMapper.toDomain(jpa.getReferenceById(id)); }
 }
