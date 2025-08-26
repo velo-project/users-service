@@ -1,0 +1,12 @@
+package com.github.veloproject.userservices.application.commands.auth.login_2fa;
+
+import com.github.veloproject.userservices.application.mediators.contracts.Request;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class LoginUser2FACommand implements Request<LoginUser2FACommandResult> {
+    private String key;
+    private String code;
+}

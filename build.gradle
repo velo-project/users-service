@@ -5,7 +5,7 @@ plugins {
     id 'org.flywaydb.flyway' version '9.5.1'
 }
 
-group = 'com.github.velo-project'
+group = 'com.github.veloproject'
 version = '0.0.1-SNAPSHOT'
 
 java {
