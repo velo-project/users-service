@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -41,8 +42,17 @@ public class UserEntity {
     public void block() { this.isBlocked = true; }
     public void unblock() { this.isBlocked = false; }
 
+    private void generateDeletedUserNickname() {
+        String uuid = UUID.randomUUID().toString().replace("-", "");
+        nickname = "deleted_" + uuid.substring(0, 12);
+    }
+
     // Ação irreversivel
-    public void delete() { this.isDeleted = true; }
+    public void delete() {
+        this.isDeleted = true;
+        generateDeletedUserNickname();
+    }
+
     public void addRole(RoleEntity role) {
         var alreadyHaveTheRole = this.roles.stream()
                 .anyMatch(r -> r == role);
