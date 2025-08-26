@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -54,12 +55,7 @@ public class UserEntity {
     }
 
     public void addRole(RoleEntity role) {
-        var alreadyHaveTheRole = this.roles.stream()
-                .anyMatch(r -> r == role);
-
-        if (!alreadyHaveTheRole) {
-            this.roles.add(role);
-        }
+        this.roles.add(role);
     }
     public void deleteRole(RoleEntity role) {
         var roleExists = this.roles.stream()

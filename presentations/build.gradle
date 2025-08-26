@@ -20,7 +20,11 @@ dependencies {
     implementation 'org.springframework.security:spring-security-crypto:6.4.4'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
     implementation 'org.flywaydb:flyway-core'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.flywaydb:flyway-database-postgresql'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation platform('org.junit:junit-bom:5.10.0')
@@ -36,5 +40,5 @@ flyway {
     url = 'jdbc:postgresql://localhost:5432/user_services'
     user = 'postgres'
     password = 'root'
-    locations = ['filesystem:src/main/resources/db/migration']
+    locations = ['filesystem:presentations/src/main/resources/db/migration']
 }
