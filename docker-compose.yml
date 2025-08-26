@@ -68,6 +68,9 @@ services:
       - "8080"
     networks:
       - user_services_internal
+    volumes:
+      - ${RSA_PRIVATE_KEY}:${RSA_PRIVATE_KEY}
+      - ${RSA_PUBLIC_KEY}:${RSA_PUBLIC_KEY}
     depends_on:
       - pgsql
       - rabbitmq
