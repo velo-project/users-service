@@ -16,6 +16,9 @@ dependencies {
     implementation project(':domain')
     implementation project(':infrastructure')
     implementation project(':application')
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation 'org.springframework.security:spring-security-crypto:6.4.4'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
     implementation 'org.flywaydb:flyway-core'
     implementation 'org.springframework.boot:spring-boot-starter-web'
