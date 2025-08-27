@@ -1,2 +1,0 @@
-ALTER TABLE tb_users
-ALTER COLUMN password_user TYPE VARCHAR(60);

@@ -1,4 +1,0 @@
-ALTER TABLE tb_users
-    ADD COLUMN deleted_user BOOLEAN DEFAULT FALSE;
-ALTER TABLE tb_users
-    ALTER COLUMN blocked_user SET DEFAULT FALSE;
