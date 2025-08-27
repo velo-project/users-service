@@ -1,4 +1,6 @@
 spring:
+  flyway:
+    table: user_services_flyway_schema_history
   application:
     name: UserServices
   mail:

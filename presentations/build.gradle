@@ -45,4 +45,5 @@ flyway {
     user = 'postgres'
     password = 'root'
     locations = ['filesystem:presentations/src/main/resources/db/migration']
+    table = 'user_services_flyway_schema_history'
 }
