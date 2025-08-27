@@ -31,7 +31,6 @@ services:
     image: bitnami/redis:7.2
     container_name: u_redis
     environment:
-      - REDIS_USERNAME=${REDIS_USERNAME}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - ALLOW_EMPTY_PASSWORD=no
     ports:
