@@ -12,10 +12,12 @@ import com.google.gson.Gson;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.stream.Collectors;
 
+@Service
 public class LoginUser2FACommandHandler extends NoAuthRequestHandler<LoginUser2FACommand, LoginUser2FACommandResult> {
     private final IUserRepository repository;
     private final IMemoryCache cache;
