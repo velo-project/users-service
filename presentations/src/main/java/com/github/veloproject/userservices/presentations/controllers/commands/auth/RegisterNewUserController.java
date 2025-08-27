@@ -1,7 +1,7 @@
-package com.github.veloproject.userservices.presentations.controllers.commands;
+package com.github.veloproject.userservices.presentations.controllers.commands.auth;
 
-import com.github.veloproject.userservices.application.commands.auth.login.LoginUserCommand;
-import com.github.veloproject.userservices.application.commands.auth.login.LoginUserCommandResult;
+import com.github.veloproject.userservices.application.commands.auth.register_new_user.RegisterNewUserCommand;
+import com.github.veloproject.userservices.application.commands.auth.register_new_user.RegisterNewUserCommandResult;
 import com.github.veloproject.userservices.application.mediators.implementations.LoggingMediatorImp;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,16 +10,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/user")
-public class LoginUserController {
+@RequestMapping("/api/user_services")
+public class RegisterNewUserController {
     private final LoggingMediatorImp mediator;
 
-    public LoginUserController(LoggingMediatorImp mediator) {
+    public RegisterNewUserController(LoggingMediatorImp mediator) {
         this.mediator = mediator;
     }
 
-    @PostMapping("/v1/login")
-    public ResponseEntity<LoginUserCommandResult> loginUser(@RequestBody LoginUserCommand command) {
+    @PostMapping("/register")
+    public ResponseEntity<RegisterNewUserCommandResult> registerNewUser(@RequestBody RegisterNewUserCommand command) {
         var response = mediator.send(command);
         return ResponseEntity
                 .status(response.getStatusCode())
