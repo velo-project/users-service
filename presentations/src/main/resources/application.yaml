@@ -1,6 +1,7 @@
 spring:
   flyway:
     table: user_services_flyway_schema_history
+
   application:
     name: UserServices
   mail:
@@ -50,11 +51,19 @@ spring:
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
+
 jwt:
   public:
     key: file:${RSA_PUBLIC_KEY}
   private:
     key: file:${RSA_PRIVATE_KEY}
+
 app:
   image:
     upload-dir: ${IMAGE_FILE_DIR}
+
+springdoc:
+  api-docs:
+    path: /api/user/swagger-docs
+  swagger-ui:
+    path: /api/user/swagger
