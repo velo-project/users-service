@@ -47,8 +47,8 @@ public class SecurityConfig {
                         .permitAll()
 
                         .requestMatchers(HttpMethod.POST,
-                                "/api/user_services/login",
-                                "/api/user_services/login/2fa",
+                                "/api/user/v1/login",
+                                "/api/user/v1/login/2fa",
                                 "/api/user_services/register")
                         .permitAll()
 

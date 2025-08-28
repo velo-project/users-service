@@ -31,7 +31,6 @@ services:
     image: bitnami/redis:7.2
     container_name: u_redis
     environment:
-      - REDIS_USERNAME=${REDIS_USERNAME}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - ALLOW_EMPTY_PASSWORD=no
     ports:
@@ -61,16 +60,25 @@ services:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - GMAIL_ADDRESS=${GMAIL_ADDRESS}
       - GMAIL_SECRET_KEY=${GMAIL_SECRET_KEY}
-      - IMAGE_FILE_DIR=${IMAGE_FILE_DIR}
-      - RSA_PRIVATE_KEY=${RSA_PRIVATE_KEY}
-      - RSA_PUBLIC_KEY=${RSA_PUBLIC_KEY}
+      - IMAGE_FILE_DIR=/opt/app/images
+      - RSA_PRIVATE_KEY=/run/secrets/app.pem
+      - RSA_PUBLIC_KEY=/run/secrets/app.pub
     expose:
       - "8080"
     networks:
       - user_services_internal
     volumes:
-      - ${RSA_PRIVATE_KEY}:${RSA_PRIVATE_KEY}
-      - ${RSA_PUBLIC_KEY}:${RSA_PUBLIC_KEY}
+      - type: bind
+        source: ${IMAGE_FILE_DIR}
+        target: /opt/app/images
+      - type: bind
+        source: ${RSA_PRIVATE_KEY}
+        target: /run/secrets/app.pem
+        read_only: true
+      - type: bind
+        source: ${RSA_PUBLIC_KEY}
+        target: /run/secrets/app.pub
+        read_only: true
     depends_on:
       - pgsql
       - rabbitmq

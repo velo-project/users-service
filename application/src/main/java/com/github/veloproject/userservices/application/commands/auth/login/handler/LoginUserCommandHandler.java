@@ -31,8 +31,11 @@ public class LoginUserCommandHandler extends NoAuthRequestHandler<LoginUserComma
     @Override
     public LoginUserCommandResult handle(LoginUserCommand request) {
         var user = repository.findByEmail(request.getEmail())
-                .filter(u -> u.getPassword().compare(request.getPassword()))
                 .orElseThrow(RuntimeException::new); // TODO Incorrect Informations Provided Exception
+
+        if (!user.getPassword().compare(request.getPassword())) {
+            throw new RuntimeException(); // TODO Incorrect Informations Provided Exception
+        }
 
         var key = send2FACode(user.getEmail());
 

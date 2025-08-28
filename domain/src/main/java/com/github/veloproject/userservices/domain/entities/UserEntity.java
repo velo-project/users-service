@@ -55,6 +55,11 @@ public class UserEntity {
     }
 
     public void addRole(RoleEntity role) {
+        if (this.roles == null) {
+            this.roles = Set.of(role);
+            return;
+        }
+
         this.roles.add(role);
     }
     public void deleteRole(RoleEntity role) {
