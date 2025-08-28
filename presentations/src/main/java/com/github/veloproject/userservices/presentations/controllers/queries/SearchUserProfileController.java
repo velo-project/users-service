@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/user_services")
+@RequestMapping("/api/user")
 public class SearchUserProfileController {
     private final LoggingMediatorImp mediator;
 
@@ -18,7 +18,7 @@ public class SearchUserProfileController {
         this.mediator = mediator;
     }
 
-    @GetMapping("/search")
+    @GetMapping("/v1/search")
     public ResponseEntity<SearchUserProfileQueryResult> searchUserProfile(@RequestParam String nickname) {
         var query = new SearchUserProfileQuery(nickname);
         var response = mediator.send(query);

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/user_services/admin")
+@RequestMapping("/api/user/")
 public class DeleteUserController {
     private final LoggingMediatorImp mediator;
 
@@ -20,7 +20,7 @@ public class DeleteUserController {
         this.mediator = mediator;
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/v1/delete")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<DeleteUserCommandResult> deleteUser(@RequestParam String nickname,
                                                               JwtAuthenticationToken token) {

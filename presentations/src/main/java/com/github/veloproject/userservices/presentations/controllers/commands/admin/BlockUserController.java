@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/user_services/admin")
+@RequestMapping("/api/user")
 public class BlockUserController {
     private final LoggingMediatorImp mediator;
 
@@ -20,7 +20,7 @@ public class BlockUserController {
         this.mediator = mediator;
     }
 
-    @PatchMapping("/block")
+    @PatchMapping("/v1/block")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<BlockUserCommandResult> blockUser(@RequestParam String nickname,
                                                             JwtAuthenticationToken token) {

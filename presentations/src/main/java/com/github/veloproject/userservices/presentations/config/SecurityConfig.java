@@ -42,28 +42,28 @@ public class SecurityConfig {
                         .permitAll() // Swagger Configuration
 
                         .requestMatchers(HttpMethod.GET,
-                                "/api/user_services/search")
+                                "/api/user/v1/search")
                         .permitAll()
 
                         .requestMatchers(HttpMethod.POST,
                                 "/api/user/v1/login",
                                 "/api/user/v1/login/2fa",
-                                "/api/user_services/register")
+                                "/api/user/v1/register")
                         .permitAll()
 
                         .requestMatchers(HttpMethod.PATCH,
-                                "/api/user_services/edit_profile",
-                                "/api/user_services/edit_banner",
-                                "/api/user_services/edit_photo")
+                                "/api/user/v1/edit_profile",
+                                "/api/user/v1/edit_banner",
+                                "/api/user/v1/edit_photo")
                         .hasAuthority("SCOPE_USER")
 
                         .requestMatchers(HttpMethod.PATCH,
-                                "/api/user_services/admin/block",
-                                "/api/user_services/admin/unblock"
+                                "/api/user/v1/block",
+                                "/api/user/v1/unblock"
                         ).hasAuthority("SCOPE_ADMIN")
 
                         .requestMatchers(HttpMethod.DELETE,
-                                "/api/user_services/admin/delete")
+                                "/api/user/v1/delete")
                         .hasAuthority("SCOPE_ADMIN")
 
                         .anyRequest().authenticated())

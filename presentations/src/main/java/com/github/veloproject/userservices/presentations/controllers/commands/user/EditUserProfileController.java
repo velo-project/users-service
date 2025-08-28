@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/user_services")
+@RequestMapping("/api/user")
 public class EditUserProfileController {
     private final LoggingMediatorImp mediator;
 
@@ -20,7 +20,7 @@ public class EditUserProfileController {
         this.mediator = mediator;
     }
 
-    @PatchMapping("/edit_profile")
+    @PatchMapping("/v1/edit_profile")
     @PreAuthorize("hasAuthority('SCOPE_USER')")
     public ResponseEntity<EditUserProfileCommandResult> editUserProfile(@RequestBody EditUserProfileCommand command,
                                                                         JwtAuthenticationToken token) {

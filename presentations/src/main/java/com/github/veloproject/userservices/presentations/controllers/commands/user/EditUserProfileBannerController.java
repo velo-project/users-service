@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/api/user_services")
+@RequestMapping("/api/user")
 public class EditUserProfileBannerController {
     private final LoggingMediatorImp mediator;
 
@@ -21,7 +21,7 @@ public class EditUserProfileBannerController {
         this.mediator = mediator;
     }
 
-    @PatchMapping("/edit_banner")
+    @PatchMapping("/v1/edit_banner")
     @PreAuthorize("hasAuthority('SCOPE_USER')")
     public ResponseEntity<EditUserProfileBannerCommandResult> editUserProfileBanner(@RequestParam("image") MultipartFile image,
                                                                                     JwtAuthenticationToken token) {
