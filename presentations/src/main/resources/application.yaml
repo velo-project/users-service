@@ -64,6 +64,6 @@ app:
 
 springdoc:
   api-docs:
-    path: /api/user/swagger-docs
+    path: /api/user/docs/swagger-docs
   swagger-ui:
-    path: /api/user/swagger.html
+    path: /api/user/docs/swagger.html

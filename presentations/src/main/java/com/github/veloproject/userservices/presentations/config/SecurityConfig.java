@@ -38,9 +38,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**")
-                        .permitAll()
+                                "/api/user/docs/**")
+                        .permitAll() // Swagger Configuration
 
                         .requestMatchers(HttpMethod.GET,
                                 "/api/user_services/search")
