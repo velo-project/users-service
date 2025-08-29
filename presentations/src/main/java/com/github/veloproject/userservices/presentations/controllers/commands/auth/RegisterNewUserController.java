@@ -18,7 +18,7 @@ public class RegisterNewUserController {
         this.mediator = mediator;
     }
 
-    @PostMapping("/register")
+    @PostMapping("/v1/register")
     public ResponseEntity<RegisterNewUserCommandResult> registerNewUser(@RequestBody RegisterNewUserCommand command) {
         var response = mediator.send(command);
         return ResponseEntity
