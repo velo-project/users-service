@@ -5,7 +5,7 @@ plugins {
     id 'org.flywaydb.flyway' version '9.5.1'
 }
 
-group = 'com.github.velo-project'
+group = 'com.github.veloproject'
 version = '0.0.1-SNAPSHOT'
 
 java {
@@ -35,6 +35,7 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.mockito:mockito-core:5.12.0'
     testImplementation 'org.mockito:mockito-junit-jupiter:5.12.0'
@@ -46,7 +47,7 @@ dependencies {
 }
 
 flyway {
-    url = 'jdbc:postgresql://localhost:5432/user_services'
+    url = 'jdbc:postgresql://pgsql:5432/user_services'
     user = 'postgres'
     password = 'root'
     locations = ['filesystem:src/main/resources/db/migration']

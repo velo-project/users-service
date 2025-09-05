@@ -37,8 +37,9 @@ out/
 .vscode/
 
 # Security
-app.key
-app.pub
+*.key
+*.pem
+*.pub
 
 # Environment
 .env*

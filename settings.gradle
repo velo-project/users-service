@@ -1,1 +1,6 @@
 rootProject.name = 'UserServices'
+include 'infrastructure'
+include 'application'
+include 'domain'
+include 'presentations'
+

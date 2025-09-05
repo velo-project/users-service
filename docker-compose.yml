@@ -1,34 +1,94 @@
-version: '3.8'
-
 services:
-  db:
+  pgsql:
     image: ankane/pgvector
-    container_name: pgvector
+    container_name: u-pgvector
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=root
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-    expose:
-      - "5432"
     networks:
-      - user_services
+      - user_services_internal
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: u-rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    ports:
+      - "${RABBITMQ_PORT:-5672}:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - user_services_internal
+
+  redis:
+    image: bitnami/redis:7.2
+    container_name: u-redis
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - ALLOW_EMPTY_PASSWORD=no
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/bitnami/redis/data
+    networks:
+      - user_services_internal
 
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: user-services
+    container_name: u-app
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - RABBITMQ_DEFAULT_HOST=${RABBITMQ_DEFAULT_HOST}
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_USERNAME=${REDIS_USERNAME}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - GMAIL_ADDRESS=${GMAIL_ADDRESS}
+      - GMAIL_SECRET_KEY=${GMAIL_SECRET_KEY}
+      - IMAGE_FILE_DIR=/opt/app/images
+      - RSA_PRIVATE_KEY=/run/secrets/app.pem
+      - RSA_PUBLIC_KEY=/run/secrets/app.pub
+    env_file:
+      - .env
     expose:
       - "8080"
     networks:
-      - user_services
+      - user_services_internal
+    volumes:
+      - type: bind
+        source: ${IMAGE_FILE_DIR}
+        target: /opt/app/images
+      - type: bind
+        source: ${RSA_PRIVATE_KEY}
+        target: /run/secrets/app.pem
+        read_only: true
+      - type: bind
+        source: ${RSA_PUBLIC_KEY}
+        target: /run/secrets/app.pub
+        read_only: true
     depends_on:
-      - db
+      - pgsql
+      - rabbitmq
+      - redis
 
   nginx:
     image: nginx:alpine
-    container_name: nginx-proxy
+    container_name: u-nginx
     ports:
       - "80:80"
     volumes:
@@ -36,11 +96,23 @@ services:
     depends_on:
       - app
     networks:
-      - user_services
+      - user_services_internal
+      - user_services_public
+      - microservices
 
 networks:
-  user_services:
+  user_services_internal:
+    internal: true
+
+  user_services_public:
     driver: bridge
 
+  microservices:
+    external: true
 volumes:
   pgdata:
+    driver: local
+  rabbitmq_data:
+    driver: local
+  redis_data:
+    driver: local
