@@ -30,6 +30,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'com.google.cloud:google-cloud-storage:2.56.0'
     // Project Dependencies
     implementation project(":domain")
     implementation project(":application")
