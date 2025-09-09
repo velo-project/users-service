@@ -60,7 +60,9 @@ services:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - GMAIL_ADDRESS=${GMAIL_ADDRESS}
       - GMAIL_SECRET_KEY=${GMAIL_SECRET_KEY}
-      - IMAGE_FILE_DIR=/opt/app/images
+      - GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT}
+      - GOOGLE_CLOUD_CREDENTIALS=/opt/app/credentials.json
+      - GOOGLE_CLOUD_BUCKET=${GOOGLE_CLOUD_BUCKET}
       - RSA_PRIVATE_KEY=/run/secrets/app.pem
       - RSA_PUBLIC_KEY=/run/secrets/app.pub
     env_file:
@@ -71,8 +73,8 @@ services:
       - user_services_internal
     volumes:
       - type: bind
-        source: ${IMAGE_FILE_DIR}
-        target: /opt/app/images
+        source: ${GOOGLE_CLOUD_CREDENTIALS}
+        target: /opt/app/credentials.json
       - type: bind
         source: ${RSA_PRIVATE_KEY}
         target: /run/secrets/app.pem
