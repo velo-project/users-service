@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,7 +49,7 @@ public class LoginUser2FACommandHandler extends NoAuthRequestHandler<LoginUser2F
                 200,
                 "User sucessfully authenticated",
                 token,
-                500L
+                15L
         );
     }
 
@@ -64,7 +65,8 @@ public class LoginUser2FACommandHandler extends NoAuthRequestHandler<LoginUser2F
                 .subject(user.getId().toString())
                 .issuedAt(now)
                 .claim("scope", scopes)
-                .expiresAt(now.plusSeconds(expiresIn))
+                .claim("email", user.getEmail())
+                .expiresAt(OffsetDateTime.now().plusMinutes(expiresIn).toInstant())
                 .build();
 
         return tokenEncoder
