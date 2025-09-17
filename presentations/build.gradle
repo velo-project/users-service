@@ -40,6 +40,7 @@ dependencies {
     implementation "io.grpc:grpc-stub:${grpcVersion}"
     implementation "com.google.protobuf:protobuf-java:${protobufVersion}"
     implementation "net.devh:grpc-server-spring-boot-starter:2.15.0.RELEASE"
+    implementation 'javax.annotation:javax.annotation-api:1.3.2' // For @Generated annotation used by protoc
     compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
     compileOnly 'org.projectlombok:lombok:1.18.34'
     annotationProcessor 'org.projectlombok:lombok:1.18.34'
