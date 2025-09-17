@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package user;
+
+option java_multiple_files = true;
+option java_package = "com.github.veloproject.userservices.presentations.grpc";
+option java_outer_classname = "UserProto";
+
+service UserService {
+  rpc UserExistsById (UserExistsByIdRequest) returns (UserExistsByIdResponse);
+}
+
+message UserExistsByIdRequest {
+  int32 id = 1;
+}
+
+message UserExistsByIdResponse {
+  bool exists = 1;
+}

@@ -42,7 +42,8 @@ public class SecurityConfig {
                         .permitAll() // Swagger Configuration
 
                         .requestMatchers(HttpMethod.GET,
-                                "/api/user/v1/search")
+                                "/api/user/v1/search",
+                                "/api/user/v2/search")
                         .permitAll()
 
                         .requestMatchers(HttpMethod.POST,
