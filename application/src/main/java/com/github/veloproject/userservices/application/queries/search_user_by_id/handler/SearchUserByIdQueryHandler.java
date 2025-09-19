@@ -18,15 +18,23 @@ public class SearchUserByIdQueryHandler extends NoAuthRequestHandler<SearchUserB
 
     @Override
     public SearchUserByIdQueryResult handle(SearchUserByIdQuery request) {
-        if (request.getUserId() == null) throw new InvalidParameterException("userId must be specified.");
+        if (request.getUserId() == null)
+            throw new InvalidParameterException("userId must be specified.");
 
-        var user = repository.getReferenceById(request.getUserId());
-        if (user == null) throw new NotFoundException("User not found.");
+        var user = repository.findById(request.getUserId());
+        if (user.isEmpty())
+            throw new NotFoundException("User not found.");
+
+        var userGet = user.get();
 
         return new SearchUserByIdQueryResult(
                 200,
                 "Found.",
-                user
+                SearchUserByIdQueryResult.UserDto.builder()
+                        .name(userGet.getName())
+                        .description(userGet.getDescription())
+                        .email(userGet.getEmail())
+                        .build()
         );
     }
 }

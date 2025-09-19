@@ -9,6 +9,7 @@ public interface IUserRepository {
     Boolean existsByNickname(String nickname);
     Optional<UserEntity> findByNickname(String nickname);
     Optional<UserEntity> findByEmail(String email);
+    Optional<UserEntity> findById(Integer id);
     Integer save(UserEntity entity);
     UserEntity getReferenceById(Integer id);
 }

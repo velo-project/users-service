@@ -2,16 +2,25 @@ package com.github.veloproject.userservices.application.queries.search_user_by_i
 
 import com.github.veloproject.userservices.application.mediators.contracts.Response;
 import com.github.veloproject.userservices.domain.entities.UserEntity;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class SearchUserByIdQueryResult extends Response {
-    private final UserEntity user;
+    private final UserDto user;
 
-    public SearchUserByIdQueryResult(Integer statusCode, String message, UserEntity user) {
+    public SearchUserByIdQueryResult(Integer statusCode, String message, UserDto user) {
         super(statusCode, message);
         this.user = user;
+    }
+
+    @Builder
+    @Getter
+    public static class UserDto {
+        private String name;
+        private String description;
+        private String email;
     }
 }

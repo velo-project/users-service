@@ -41,6 +41,13 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
+    public Optional<UserEntity> findById(Integer id) {
+        var table = jpa.findById(id);
+
+        return table.map(UserMapper::toDomain);
+    }
+
+    @Override
     public Integer save(UserEntity entity) {
         var table = UserMapper.toPersistence(entity);
 
