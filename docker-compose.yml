@@ -7,11 +7,12 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "${POSTGRES_PORT:-5432}:5432"        # Expõe a porta do Postgres para o host
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
       - user_services_internal
+      - user_services_public                # Colocando em rede pública para acesso externo
 
   rabbitmq:
     image: rabbitmq:3.13-management
@@ -26,6 +27,7 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq
     networks:
       - user_services_internal
+      - user_services_public                # Rede pública para acesso ao painel web
 
   redis:
     image: bitnami/redis:7.2
@@ -39,6 +41,7 @@ services:
       - redis_data:/bitnami/redis/data
     networks:
       - user_services_internal
+      - user_services_public                # Rede pública para acesso externo
 
   app:
     build:
@@ -67,10 +70,13 @@ services:
       - RSA_PUBLIC_KEY=/run/secrets/app.pub
     env_file:
       - .env
-    expose:
-      - "8080"
+    ports:
+      - "8081:8080"                        # Mapear porta correta para acesso externo
+      - "9091:9090"
     networks:
       - user_services_internal
+      - user_services_public                # Para expor portas ao mundo real
+      - microservices                       # Rede microservices externa (se necessário)
     volumes:
       - type: bind
         source: ${GOOGLE_CLOUD_CREDENTIALS}
@@ -104,13 +110,12 @@ services:
 
 networks:
   user_services_internal:
-    internal: true
-
+    internal: false                      # Tornar interna mas acessível via rede
   user_services_public:
-    driver: bridge
-
+    driver: bridge                      # Rede para expor containers à rede host (público)
   microservices:
-    external: true
+    external: true                     # Rede externa, configurada fora do Compose
+
 volumes:
   pgdata:
     driver: local
