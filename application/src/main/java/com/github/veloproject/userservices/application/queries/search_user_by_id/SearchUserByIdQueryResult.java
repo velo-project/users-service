@@ -19,8 +19,14 @@ public class SearchUserByIdQueryResult extends Response {
     @Builder
     @Getter
     public static class UserDto {
+        private Integer id;
+        private String nickname;
         private String name;
         private String description;
         private String email;
+        private String bannerPhotoUrl;
+        private String profilePhotoUrl;
+        private Boolean isDeleted;
+        private Boolean isBlocked;
     }
 }

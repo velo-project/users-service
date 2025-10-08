@@ -2,6 +2,9 @@ package com.github.veloproject.userservices.presentations.grpc;
 
 import com.github.veloproject.userservices.application.mediators.contracts.Mediator;
 import com.github.veloproject.userservices.application.queries.search_user_by_id.SearchUserByIdQuery;
+import com.github.veloproject.userservices.presentations.grpc.UserProto;
+import com.github.veloproject.userservices.presentations.grpc.UserEntity;
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;
@@ -21,7 +24,7 @@ public class UserServiceGrpcHandler extends UserServiceGrpc.UserServiceImplBase 
             var userResponse = mediator.send(query);
             userExists = userResponse.getUser() != null;
         } catch (Exception e) {
-            responseObserver.onError(io.grpc.Status.INTERNAL
+            responseObserver.onError(Status.NOT_FOUND
                     .withDescription("Error while checking user existence: " + e.getMessage())
                     .asRuntimeException());
             return;
@@ -33,5 +36,42 @@ public class UserServiceGrpcHandler extends UserServiceGrpc.UserServiceImplBase 
 
         responseObserver.onNext(response);
         responseObserver.onCompleted();
+    }
+
+    @Override
+    public void getUserById(GetUserByIdRequest request, StreamObserver<GetUserByIdResponse> responseObserver) {
+        int userId = request.getId();
+        try {
+            var userResponse = mediator.send(new SearchUserByIdQuery(userId));
+            var user = userResponse.getUser();
+            if (user == null) {
+                responseObserver.onError(io.grpc.Status.NOT_FOUND
+                        .withDescription("Usuário não encontrado com id: " + userId)
+                        .asRuntimeException());
+                return;
+            }
+
+            UserEntity userProto = UserEntity.newBuilder()
+                    .setId(user.getId())
+                    .setName(user.getName())
+                    .setNickname(user.getNickname())
+                    .setBannerPhotoUrl(user.getBannerPhotoUrl() != null ? user.getBannerPhotoUrl() : "")
+                    .setProfilePhotoUrl(user.getProfilePhotoUrl() != null ? user.getProfilePhotoUrl() : "")
+                    .setIsBlocked(user.getIsBlocked())
+                    .setIsDeleted(user.getIsDeleted())
+                    .build();
+
+            GetUserByIdResponse response = GetUserByIdResponse.newBuilder()
+                    .setUser(userProto)
+                    .build();
+
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+
+        } catch (Exception e) {
+            responseObserver.onError(io.grpc.Status.INTERNAL
+                    .withDescription("Erro ao buscar usuário: " + e.getMessage())
+                    .asRuntimeException());
+        }
     }
 }

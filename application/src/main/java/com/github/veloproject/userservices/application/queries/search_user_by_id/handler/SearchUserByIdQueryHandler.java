@@ -31,9 +31,15 @@ public class SearchUserByIdQueryHandler extends NoAuthRequestHandler<SearchUserB
                 200,
                 "Found.",
                 SearchUserByIdQueryResult.UserDto.builder()
+                        .id(userGet.getId())
                         .name(userGet.getName())
+                        .nickname(userGet.getNickname())
+                        .bannerPhotoUrl(userGet.getBannerPhotoUrl())
+                        .profilePhotoUrl(userGet.getProfilePhotoUrl())
                         .description(userGet.getDescription())
                         .email(userGet.getEmail())
+                        .isBlocked(userGet.getIsBlocked())
+                        .isDeleted(userGet.getIsDeleted())
                         .build()
         );
     }
