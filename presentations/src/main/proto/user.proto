@@ -8,6 +8,7 @@ option java_outer_classname = "UserProto";
 
 service UserService {
   rpc UserExistsById (UserExistsByIdRequest) returns (UserExistsByIdResponse);
+  rpc GetUserById (GetUserByIdRequest) returns (GetUserByIdResponse);
 }
 
 message UserExistsByIdRequest {
@@ -16,4 +17,22 @@ message UserExistsByIdRequest {
 
 message UserExistsByIdResponse {
   bool exists = 1;
+}
+
+message GetUserByIdRequest {
+  int32 id = 1;
+}
+
+message GetUserByIdResponse {
+  UserEntity user = 1;
+}
+
+message UserEntity {
+  int32 id = 1;
+  string name = 2;
+  string nickname = 3;
+  string banner_photo_url = 4;
+  string profile_photo_url = 5;
+  bool is_blocked = 6;
+  bool is_deleted = 7;
 }
