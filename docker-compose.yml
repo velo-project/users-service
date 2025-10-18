@@ -30,7 +30,7 @@ services:
       - user_services_public
 
   redis:
-    image: bitnami/redis:7.2
+    image: redis:8.2.2
     container_name: u-redis
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
