@@ -6,6 +6,8 @@ import com.github.veloproject.userservices.infrastructure.mappers.UserMapper;
 import com.github.veloproject.userservices.infrastructure.repositories.jpa.IUserRepositoryJpa;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -57,5 +59,15 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public UserEntity getReferenceById(Integer id) { return UserMapper.toDomain(jpa.getReferenceById(id)); }
+    public UserEntity getReferenceById(Integer id) {
+        return UserMapper.toDomain(jpa.getReferenceById(id));
+    }
+
+    @Override
+    public List<UserEntity> findAllByIdIn(Collection<Integer> ids) {
+        return jpa.findAllByIdIn(ids)
+                .stream()
+                .map(UserMapper::toDomain)
+                .toList();
+    }
 }

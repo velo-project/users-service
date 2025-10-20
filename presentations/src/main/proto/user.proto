@@ -9,8 +9,10 @@ option java_outer_classname = "UserProto";
 service UserService {
   rpc UserExistsById (UserExistsByIdRequest) returns (UserExistsByIdResponse);
   rpc GetUserById (GetUserByIdRequest) returns (GetUserByIdResponse);
+  rpc GetUsersByIdList (GetUsersByIdListRequest) returns (GetUsersByIdListResponse);
 }
 
+/* === IO === */
 message UserExistsByIdRequest {
   int32 id = 1;
 }
@@ -27,6 +29,15 @@ message GetUserByIdResponse {
   UserEntity user = 1;
 }
 
+message GetUsersByIdListRequest {
+  repeated int32 id = 1;
+}
+
+message GetUsersByIdListResponse {
+  repeated UserEntity user = 1;
+}
+
+/* === ENTITIES === */
 message UserEntity {
   int32 id = 1;
   string name = 2;
