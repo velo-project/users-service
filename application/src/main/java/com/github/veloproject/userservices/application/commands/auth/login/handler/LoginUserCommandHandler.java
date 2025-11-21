@@ -7,6 +7,7 @@ import com.github.veloproject.userservices.application.commands.auth.login.Login
 import com.github.veloproject.userservices.application.commands.auth.login.LoginUserCommandResult;
 import com.github.veloproject.userservices.application.dtos.TFACode;
 import com.github.veloproject.userservices.application.mediators.contracts.handlers.NoAuthRequestHandler;
+import com.github.veloproject.userservices.domain.exceptions.IncorrectInformationsProvidedException;
 import com.google.gson.Gson;
 import org.springframework.stereotype.Service;
 
@@ -31,10 +32,10 @@ public class LoginUserCommandHandler extends NoAuthRequestHandler<LoginUserComma
     @Override
     public LoginUserCommandResult handle(LoginUserCommand request) {
         var user = repository.findByEmail(request.getEmail())
-                .orElseThrow(RuntimeException::new); // TODO Incorrect Informations Provided Exception
+                .orElseThrow(IncorrectInformationsProvidedException::new); // TODO Incorrect Informations Provided Exception
 
         if (!user.getPassword().compare(request.getPassword())) {
-            throw new RuntimeException(); // TODO Incorrect Informations Provided Exception
+            throw new IncorrectInformationsProvidedException();
         }
 
         var key = send2FACode(user.getEmail());
