@@ -9,6 +9,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.MemoryCacheImageOutputStream;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
@@ -36,6 +43,22 @@ public class ImageFileService implements IImageFileService {
             throw new InvalidFileTypeException("Image must be jpg, jpeg or png.");
         }
 
+        BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
+        /* Ajustar conforme necessário. */
+        float quality = 0.85f;
+
+        ByteArrayOutputStream compressedOutput = new ByteArrayOutputStream();
+        ImageWriter jpgWriter = ImageIO.getImageWritersByFormatName("jpg").next();
+        ImageWriteParam jpgParams = jpgWriter.getDefaultWriteParam();
+        jpgParams.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+        jpgParams.setCompressionQuality(quality);
+
+        jpgWriter.setOutput(new MemoryCacheImageOutputStream(compressedOutput));
+        jpgWriter.write(null, new IIOImage(bufferedImage, null, null), jpgParams);
+        jpgWriter.dispose();
+
+        byte[] compressedByteArray = compressedOutput.toByteArray();
+
         var filename = UUID.randomUUID()
                 .toString()
                 .replaceAll("-", "");
@@ -45,19 +68,17 @@ public class ImageFileService implements IImageFileService {
         var month = now.getMonthValue();
         var day = now.getDayOfMonth();
 
-        String objectPath = MessageFormat.format("images/{0}/{1}/{2}/users/{3}{4}",
+        String objectPath = MessageFormat.format("images/{0}/{1}/{2}/users/{3}.jpg",
                 year,
                 month,
                 day,
-                filename,
-                originalFilename.substring(originalFilename.lastIndexOf(".")));
-
+                filename);
         BlobId blobId = BlobId.of(bucketName, objectPath);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
-                .setContentType(file.getContentType())
+                .setContentType("image/jpeg")
                 .build();
 
-        storage.create(blobInfo, file.getBytes());
+        storage.create(blobInfo, compressedByteArray);
 
         return objectPath;
     }
