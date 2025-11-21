@@ -8,6 +8,7 @@ import com.github.veloproject.userservices.application.dtos.TFACode;
 import com.github.veloproject.userservices.application.mediators.contracts.handlers.NoAuthRequestHandler;
 import com.github.veloproject.userservices.domain.entities.RoleEntity;
 import com.github.veloproject.userservices.domain.entities.UserEntity;
+import com.github.veloproject.userservices.domain.exceptions.IncorrectInformationsProvidedException;
 import com.google.gson.Gson;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -42,14 +43,14 @@ public class LoginUser2FACommandHandler extends NoAuthRequestHandler<LoginUser2F
 
         var codeObject = gson.fromJson(code, TFACode.class);
         var user = repository.findByEmail(codeObject.getEmail())
-                .orElseThrow(RuntimeException::new); // TODO
+                .orElseThrow(IncorrectInformationsProvidedException::new);
         var token = generateJwt(user, 500L);
 
         return new LoginUser2FACommandResult(
                 200,
                 "User sucessfully authenticated",
                 token,
-                15L
+                500L
         );
     }
 
