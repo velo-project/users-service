@@ -44,8 +44,8 @@ public class LoginUser2FACommandHandler extends NoAuthRequestHandler<LoginUser2F
         var codeObject = gson.fromJson(code, TFACode.class);
         var user = repository.findByEmail(codeObject.getEmail())
                 .orElseThrow(IncorrectInformationsProvidedException::new);
-        /* 1 HORA -- AJUSTE CONFORME NECESSÁRIO */
-        var expiresIn = 60L;
+        /* 0,5 HORA -- AJUSTE CONFORME NECESSÁRIO */
+        var expiresIn = 30L;
 
         var token = generateJwt(user, expiresIn);
 
