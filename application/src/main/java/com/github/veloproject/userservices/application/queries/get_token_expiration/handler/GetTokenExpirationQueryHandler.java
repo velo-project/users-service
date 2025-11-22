@@ -31,12 +31,14 @@ public class GetTokenExpirationQueryHandler extends NoAuthRequestHandler<GetToke
             Instant expiresAt = jwt.getExpiresAt();
             return new GetTokenExpirationQueryResult(200,
                     "Valid token.",
-                    Duration.between(Instant.now(), expiresAt).toMinutes());
+                    Duration.between(Instant.now(), expiresAt).toMinutes(),
+                    false);
         } catch (Exception e) {
             return new GetTokenExpirationQueryResult(
-                    400,
+                    401,
                     "Token is invalid or expired.",
-                    0L
+                    0L,
+                    true
             );
         }
     }
