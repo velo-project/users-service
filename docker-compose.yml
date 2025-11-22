@@ -12,6 +12,7 @@ services:
       - pgdata:/var/lib/postgresql/data
     networks:
       - user_services_internal
+      - user_services_public
 
   rabbitmq:
     image: rabbitmq:3.13-management
@@ -26,9 +27,10 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq
     networks:
       - user_services_internal
+      - user_services_public
 
   redis:
-    image: bitnami/redis:7.2
+    image: redis:8.2.2
     container_name: u-redis
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
@@ -39,6 +41,7 @@ services:
       - redis_data:/bitnami/redis/data
     networks:
       - user_services_internal
+      - user_services_public
 
   app:
     build:
@@ -67,10 +70,13 @@ services:
       - RSA_PUBLIC_KEY=/run/secrets/app.pub
     env_file:
       - .env
-    expose:
-      - "8080"
+    ports:
+      - "8081:8080"
+      - "9091:9090"
     networks:
       - user_services_internal
+      - user_services_public
+      - microservices
     volumes:
       - type: bind
         source: ${GOOGLE_CLOUD_CREDENTIALS}
@@ -104,13 +110,12 @@ services:
 
 networks:
   user_services_internal:
-    internal: true
-
+    internal: false
   user_services_public:
     driver: bridge
-
   microservices:
     external: true
+
 volumes:
   pgdata:
     driver: local

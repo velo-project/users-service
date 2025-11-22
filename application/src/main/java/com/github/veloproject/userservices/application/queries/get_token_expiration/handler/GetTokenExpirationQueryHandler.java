@@ -1,0 +1,43 @@
+package com.github.veloproject.userservices.application.queries.get_token_expiration.handler;
+
+import com.github.veloproject.userservices.application.commands.auth.refresh_token.RefreshTokenCommandResult;
+import com.github.veloproject.userservices.application.mediators.contracts.handlers.NoAuthRequestHandler;
+import com.github.veloproject.userservices.application.queries.get_token_expiration.GetTokenExpirationQuery;
+import com.github.veloproject.userservices.application.queries.get_token_expiration.GetTokenExpirationQueryResult;
+import com.github.veloproject.userservices.domain.exceptions.InvalidParameterException;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.stereotype.Service;
+
+import java.time.Duration;
+import java.time.Instant;
+
+@Service
+public class GetTokenExpirationQueryHandler extends NoAuthRequestHandler<GetTokenExpirationQuery, GetTokenExpirationQueryResult> {
+    private final JwtDecoder jwtDecoder;
+
+    public GetTokenExpirationQueryHandler(JwtDecoder jwtDecoder) {
+        this.jwtDecoder = jwtDecoder;
+    }
+
+    @Override
+    public GetTokenExpirationQueryResult handle(GetTokenExpirationQuery request) {
+        if (request.token() == null || request.token().isEmpty()) {
+            throw new InvalidParameterException("Token is null or empty.");
+        }
+
+        try {
+            Jwt jwt = jwtDecoder.decode(request.token());
+            Instant expiresAt = jwt.getExpiresAt();
+            return new GetTokenExpirationQueryResult(200,
+                    "Valid token.",
+                    Duration.between(Instant.now(), expiresAt).toMinutes());
+        } catch (Exception e) {
+            return new GetTokenExpirationQueryResult(
+                    400,
+                    "Token is invalid or expired.",
+                    0L
+            );
+        }
+    }
+}

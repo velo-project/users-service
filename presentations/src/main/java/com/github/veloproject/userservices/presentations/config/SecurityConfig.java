@@ -43,13 +43,15 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.GET,
                                 "/api/user/v1/search",
-                                "/api/user/v2/search")
+                                "/api/user/v2/search",
+                                "/api/user/v1/get-expiration")
                         .permitAll()
 
                         .requestMatchers(HttpMethod.POST,
                                 "/api/user/v1/login",
                                 "/api/user/v1/login/2fa",
-                                "/api/user/v1/register")
+                                "/api/user/v1/register",
+                                "/api/user/v1/refresh")
                         .permitAll()
 
                         .requestMatchers(HttpMethod.PATCH,

@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.security.InvalidParameterException;
 
-// TODO Alteração no tamanho da imagem.
 @Service
 public class EditUserProfilePhotoCommandHandler
         extends AuthRequestHandler<EditUserProfilePhotoCommand, EditUserProfilePhotoCommandResult> {

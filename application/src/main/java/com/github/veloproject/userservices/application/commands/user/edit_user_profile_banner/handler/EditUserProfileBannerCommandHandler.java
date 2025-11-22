@@ -26,7 +26,6 @@ public class EditUserProfileBannerCommandHandler
         this.imageService = imageService;
     }
 
-    // TODO Alteração no tamanho da imagem.
     @Override
     @Transactional
     public EditUserProfileBannerCommandResult handle(EditUserProfileBannerCommand request,
