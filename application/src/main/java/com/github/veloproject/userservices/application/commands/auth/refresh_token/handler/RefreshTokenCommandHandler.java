@@ -7,24 +7,24 @@ import com.github.veloproject.userservices.application.mediators.contracts.handl
 import com.github.veloproject.userservices.domain.entities.RoleEntity;
 import com.github.veloproject.userservices.domain.entities.UserEntity;
 import com.github.veloproject.userservices.domain.exceptions.InvalidParameterException;
+import com.nimbusds.jwt.SignedJWT;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 @Service
 public class RefreshTokenCommandHandler extends NoAuthRequestHandler<RefreshTokenCommand, RefreshTokenCommandResult> {
-    private final JwtDecoder jwtDecoder;
     private final JwtEncoder tokenEncoder;
     private final IUserRepository repository;
 
-    public RefreshTokenCommandHandler(JwtDecoder jwtDecoder, JwtEncoder tokenEncoder, IUserRepository repository) {
-        this.jwtDecoder = jwtDecoder;
+    public RefreshTokenCommandHandler(JwtEncoder tokenEncoder, IUserRepository repository) {
         this.tokenEncoder = tokenEncoder;
         this.repository = repository;
     }
@@ -36,26 +36,48 @@ public class RefreshTokenCommandHandler extends NoAuthRequestHandler<RefreshToke
         }
 
         try {
-            var jwt = jwtDecoder.decode(request.refreshToken());
+            SignedJWT signedJWT = SignedJWT.parse(request.refreshToken());
+            Date expirationTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+            Instant expiresAt = expirationTime.toInstant();
+            Instant now = Instant.now();
 
-            var userId = jwt.getSubject();
+            if (expiresAt.isBefore(now)) {
+                Instant expiredSince = now.minusSeconds(3600);
+                if (expiresAt.isBefore(expiredSince)) {
+                    return new RefreshTokenCommandResult(
+                            401,
+                            "Refresh token is expired more than the limit time.",
+                            null,
+                            0L
+                    );
+                }
+            }
+
+            String userId = signedJWT.getJWTClaimsSet().getSubject();
             var user = repository.findById(Integer.valueOf(userId))
-                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                    .orElseThrow(() -> new RuntimeException("User not found."));
 
             /* 24 HORAS -- AJUSTE CONFORME NECESSÁRIO */
-            var expiresIn = 1440L;
+            var expiresIn = 60L * 24L;
             var newAccessToken = generateJwt(user, expiresIn);
 
             return new RefreshTokenCommandResult(
                     200,
-                    "Token renovado com sucesso",
+                    "Token renovated.",
                     newAccessToken,
                     expiresIn
+            );
+        } catch (ParseException e) {
+            return new RefreshTokenCommandResult(
+                    401,
+                    "Refresh Token is invalid.",
+                    null,
+                    0L
             );
         } catch (Exception e) {
             return new RefreshTokenCommandResult(
                     401,
-                    "Refresh token inválido ou expirado",
+                    "Error while processing token.",
                     null,
                     0L
             );
