@@ -49,7 +49,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,
                                 "/api/user/v1/login",
                                 "/api/user/v1/login/2fa",
-                                "/api/user/v1/register")
+                                "/api/user/v1/register",
+                                "/api/user/v1/refresh")
                         .permitAll()
 
                         .requestMatchers(HttpMethod.PATCH,
