@@ -51,7 +51,7 @@ public class LoginUser2FACommandHandler extends NoAuthRequestHandler<LoginUser2F
 
         return new LoginUser2FACommandResult(
                 200,
-                "User sucessfully authenticated",
+                "User successfully authenticated",
                 token,
                 expiresIn
         );
