@@ -96,7 +96,7 @@ public class LoginUserCommandHandler extends NoAuthRequestHandler<LoginUserComma
         </head>
         <body>
             <div class="container">
-                <img src="https://media.discordapp.net/attachments/1226716662485614682/1442022514569121922/velo.png?ex=6923eb9e&is=69229a1e&hm=5373db23378b66d7a84e0c7976d8c6fec985ce2485b69da8ac6f012f0f7fe776&=&format=webp&quality=lossless&width=920&height=791" class="logo">
+                <img src="https://storage.googleapis.com/velo-static-files/velo-logo.png" class="logo">
                 <h1>AUTENTICAÇÃO DE DOIS FATORES</h1>
                 <p><strong>Olá! 👋</strong><br>Vimos que você está tentando acessar o Velo. Aqui está seu código de autenticação de dois fatores 🔒:</p>
                 <div class="code">{{code}}</div>
