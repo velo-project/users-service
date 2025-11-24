@@ -102,7 +102,7 @@ public class LoginUserCommandHandler extends NoAuthRequestHandler<LoginUserComma
                 <div class="code">{{code}}</div>
                 <p>Este código é válido por <strong>{{expiresIn}} minutos</strong>, então <strong>pedale! 🚵</strong></p>
                 <div class="footer">
-                    NÃO COMPARTILHE esse código com terceiros!
+                    <strong><u>NÃO COMPARTILHE esse código com terceiros!</u></strong>
                     Pensando em sua segurança, o objetivo deste e-mail é somente avisar que <strong><u>houve uma tentativa de login<u></strong>. Caso você <u>não reconheça este acesso</u>, <u>altere sua senha</u> e entre em contato conosco pela nossa <u>Central de Ajuda</u>.</div>
                 </div>
             </div>
@@ -116,10 +116,12 @@ public class LoginUserCommandHandler extends NoAuthRequestHandler<LoginUserComma
         variables.put("code", code);
         variables.put("expiresIn", String.valueOf(expiresIn));
 
-        this.email.sendWithTemplate(email,
-                "Código de Autenticação de dois fatores | " + code,
+        this.email.sendWithTemplate(
+                email,
+                code + " | Código de autenticação de dois fatores",
                 htmlTemplate,
-                variables);
+                variables
+        );
 
         var key = UUID.randomUUID().toString();
         var json = gson.toJson(TFACode.builder()
