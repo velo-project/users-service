@@ -51,7 +51,9 @@ public class SecurityConfig {
                                 "/api/user/v1/login",
                                 "/api/user/v1/login/2fa",
                                 "/api/user/v1/register",
-                                "/api/user/v1/refresh")
+                                "/api/user/v1/refresh",
+                                "/api/user/v1/password-recovery",
+                                "/api/user/v1/password-recovery/confirmation")
                         .permitAll()
 
                         .requestMatchers(HttpMethod.PATCH,
