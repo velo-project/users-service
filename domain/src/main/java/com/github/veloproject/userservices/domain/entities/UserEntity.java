@@ -1,5 +1,6 @@
 package com.github.veloproject.userservices.domain.entities;
 
+import com.github.veloproject.userservices.domain.exceptions.NotFoundException;
 import com.github.veloproject.userservices.domain.valueObjects.PasswordValueObject;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -7,7 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -50,6 +50,8 @@ public class UserEntity {
 
     // Ação irreversivel
     public void delete() {
+        if (isDeleted) throw new NotFoundException("User");
+
         this.isDeleted = true;
         generateDeletedUserNickname();
     }
