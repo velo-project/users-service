@@ -20,31 +20,31 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public Boolean existsByEmail(String email) {
-        return jpa.existsByEmailAndIsBlockedFalse(email);
+        return jpa.existsByEmailAndIsDeletedFalse(email);
     }
 
     @Override
     public Boolean existsByNickname(String nickname) {
-        return jpa.existsByNicknameAndIsBlockedFalse(nickname);
+        return jpa.existsByNicknameAndIsDeletedFalse(nickname);
     }
 
     @Override
     public Optional<UserEntity> findByNickname(String nickname) {
-        var userTableRow = jpa.findByNicknameAndIsBlockedFalse(nickname);
+        var userTableRow = jpa.findByNicknameAndIsDeletedFalse(nickname);
 
         return userTableRow.map(UserMapper::toDomain);
     }
 
     @Override
     public Optional<UserEntity> findByEmail(String email) {
-        var userTableRow = jpa.findByEmailAndIsBlockedFalse(email);
+        var userTableRow = jpa.findByEmailAndIsDeletedFalse(email);
 
         return userTableRow.map(UserMapper::toDomain);
     }
 
     @Override
     public Optional<UserEntity> findById(Integer id) {
-        var table = jpa.findById(id);
+        var table = jpa.findByIdAndIsDeletedIsFalse(id);
 
         return table.map(UserMapper::toDomain);
     }
@@ -60,12 +60,12 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public UserEntity getReferenceById(Integer id) {
-        return UserMapper.toDomain(jpa.getReferenceById(id));
+        return UserMapper.toDomain(jpa.getReferenceByIdAndIsDeletedFalse(id));
     }
 
     @Override
     public List<UserEntity> findAllByIdIn(Collection<Integer> ids) {
-        return jpa.findAllByIdIn(ids)
+        return jpa.findAllByIdInAndIsDeletedFalse(ids)
                 .stream()
                 .map(UserMapper::toDomain)
                 .toList();

@@ -10,9 +10,11 @@ import java.util.Optional;
 
 @Repository
 public interface IUserRepositoryJpa extends JpaRepository<UserTable, Integer> {
-    boolean existsByEmailAndIsBlockedFalse(String email);
-    boolean existsByNicknameAndIsBlockedFalse(String nickname);
-    Optional<UserTable> findByNicknameAndIsBlockedFalse(String nickname);
-    Optional<UserTable> findByEmailAndIsBlockedFalse(String email);
-    List<UserTable> findAllByIdIn(Collection<Integer> ids);
+    List<UserTable> findAllByIdInAndIsDeletedFalse(Collection<Integer> ids);
+    boolean existsByEmailAndIsDeletedFalse(String email);
+    boolean existsByNicknameAndIsDeletedFalse(String nickname);
+    Optional<UserTable> findByNicknameAndIsDeletedFalse(String nickname);
+    Optional<UserTable> findByEmailAndIsDeletedFalse(String email);
+    Optional<UserTable> findByIdAndIsDeletedIsFalse(Integer id);
+    UserTable getReferenceByIdAndIsDeletedFalse(Integer id);
 }
