@@ -63,13 +63,16 @@ public class SecurityConfig {
                         .hasAuthority("SCOPE_USER")
 
                         .requestMatchers(HttpMethod.PATCH,
-                                "/api/user/v1/block",
-                                "/api/user/v1/unblock"
+                                "/api/user/admin/v1/block",
+                                "/api/user/admin/v1/unblock"
                         ).hasAuthority("SCOPE_ADMIN")
 
                         .requestMatchers(HttpMethod.DELETE,
-                                "/api/user/v1/delete")
+                                "/api/user/admin/v1/delete")
                         .hasAuthority("SCOPE_ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,
+                                "/api/user/v1/delete")
+                        .hasAuthority("SCOPE_USER")
 
                         .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
