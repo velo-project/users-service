@@ -2,7 +2,7 @@ package com.github.veloproject.userservices.application.commands.auth.forgot_my_
 
 import com.github.veloproject.userservices.application.mediators.contracts.Request;
 
-public record ForgotMyPasswordCommand(
-
-) implements Request<ForgotMyPasswordCommandResult> {
+public record PasswordRecoveryCommand(
+    String email
+) implements Request<PasswordRecoveryCommandResult> {
 }

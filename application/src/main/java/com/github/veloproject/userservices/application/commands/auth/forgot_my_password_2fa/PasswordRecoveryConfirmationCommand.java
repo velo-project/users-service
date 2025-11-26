@@ -2,8 +2,9 @@ package com.github.veloproject.userservices.application.commands.auth.forgot_my_
 
 import com.github.veloproject.userservices.application.mediators.contracts.Request;
 
-public record ForgotMyPassword2FACommand(
+public record PasswordRecoveryConfirmationCommand(
     String key,
-    Integer code
-) implements Request<ForgotMyPassword2FACommandResult> {
+    String code,
+    String newPassword
+) implements Request<PasswordRecoveryConfirmationCommandResult> {
 }
