@@ -4,11 +4,14 @@ import com.github.veloproject.userservices.application.abstractions.cache.IMemor
 import com.github.veloproject.userservices.application.abstractions.repositories.IUserRepository;
 import com.github.veloproject.userservices.application.commands.auth.login_2fa.LoginUser2FACommand;
 import com.github.veloproject.userservices.application.commands.auth.login_2fa.LoginUser2FACommandResult;
+import com.github.veloproject.userservices.application.dtos.PRConfirmationCode;
 import com.github.veloproject.userservices.application.dtos.TFACode;
 import com.github.veloproject.userservices.application.mediators.contracts.handlers.NoAuthRequestHandler;
 import com.github.veloproject.userservices.domain.entities.RoleEntity;
 import com.github.veloproject.userservices.domain.entities.UserEntity;
 import com.github.veloproject.userservices.domain.exceptions.IncorrectInformationsProvidedException;
+import com.github.veloproject.userservices.domain.exceptions.InternalErrorException;
+import com.github.veloproject.userservices.domain.exceptions.NotFoundException;
 import com.google.gson.Gson;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -36,17 +39,21 @@ public class LoginUser2FACommandHandler extends NoAuthRequestHandler<LoginUser2F
     @Override
     public LoginUser2FACommandResult handle(LoginUser2FACommand request) {
         var code = cache.get(request.getKey());
+        if (code == null) throw new IncorrectInformationsProvidedException();
+        var codeObject = gson.fromJson(code, PRConfirmationCode.class);
+
+        if (!request.getCode().equals(codeObject.getCode()))
+            throw new IncorrectInformationsProvidedException();
+
         var isDeleted = cache.delete(request.getKey());
-
         if (!isDeleted)
-            throw new RuntimeException();
+            throw new InternalErrorException("An internal error has occurred.");
 
-        var codeObject = gson.fromJson(code, TFACode.class);
         var user = repository.findByEmail(codeObject.getEmail())
-                .orElseThrow(IncorrectInformationsProvidedException::new);
+                .orElseThrow(() -> new NotFoundException("User"));
+
         /* 0,5 HORA -- AJUSTE CONFORME NECESSÁRIO */
         var expiresIn = 30L;
-
         var token = generateJwt(user, expiresIn);
 
         return new LoginUser2FACommandResult(
