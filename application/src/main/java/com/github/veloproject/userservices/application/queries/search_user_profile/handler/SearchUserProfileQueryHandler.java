@@ -19,10 +19,7 @@ public class SearchUserProfileQueryHandler extends NoAuthRequestHandler<SearchUs
 
     @Override
     public SearchUserProfileQueryResult handle(SearchUserProfileQuery request) {
-        if (request.getNickname() == null) throw new InvalidParameterException("Nickname must be specified.");
-
-        var user = repository.findByEmail(request.getNickname())
-                .filter(u -> !u.getIsDeleted())
+        var user = repository.findByNickname(request.getNickname())
                 .orElseThrow(() -> new NotFoundException(request.getNickname()));
 
         return new SearchUserProfileQueryResult(
