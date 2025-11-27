@@ -22,10 +22,6 @@ public class GetTokenExpirationQueryHandler extends NoAuthRequestHandler<GetToke
 
     @Override
     public GetTokenExpirationQueryResult handle(GetTokenExpirationQuery request) {
-        if (request.token() == null || request.token().isEmpty()) {
-            throw new InvalidParameterException("Token is null or empty.");
-        }
-
         try {
             Jwt jwt = jwtDecoder.decode(request.token());
             Instant expiresAt = jwt.getExpiresAt();

@@ -7,15 +7,11 @@ import com.github.veloproject.userservices.application.mediators.contracts.handl
 import com.github.veloproject.userservices.domain.entities.UserEntity;
 import com.github.veloproject.userservices.domain.enums.UserProfileUpdatableField;
 import com.github.veloproject.userservices.domain.exceptions.AlreadyExistsException;
-import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
+import com.github.veloproject.userservices.domain.exceptions.InvalidParameterException;
+import com.github.veloproject.userservices.domain.exceptions.NotFoundException;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.security.InvalidParameterException;
-
-import static com.github.veloproject.userservices.domain.enums.UserProfileUpdatableField.DESCRIPTION;
-import static com.github.veloproject.userservices.domain.enums.UserProfileUpdatableField.NICKNAME;
 
 @Service
 public class EditUserProfileCommandHandler extends AuthRequestHandler<EditUserProfileCommand, EditUserProfileCommandResult> {
@@ -29,11 +25,8 @@ public class EditUserProfileCommandHandler extends AuthRequestHandler<EditUserPr
     @Transactional
     public EditUserProfileCommandResult handle(EditUserProfileCommand request,
                                                JwtAuthenticationToken token) {
-        if (request.getField() == null) throw new InvalidParameterException("Field must be specified.");
-        else if (request.getFieldValue() == null) throw new InvalidParameterException("fieldValue must be specified.");
-        else if (token == null) throw new InvalidBearerTokenException("Bearer Token must be specified.");
-
-        var user = repository.getReferenceById(Integer.valueOf(token.getName()));
+        var user = repository.findById(Integer.valueOf(token.getName()))
+                .orElseThrow(() -> new NotFoundException("User"));
         updateField(request.getField(), request.getFieldValue(), user);
 
         return new EditUserProfileCommandResult(
@@ -44,7 +37,10 @@ public class EditUserProfileCommandHandler extends AuthRequestHandler<EditUserPr
 
     private void updateField(UserProfileUpdatableField field, String fieldValue, UserEntity user) {
         switch (field) {
-            case DESCRIPTION -> user.setDescription(fieldValue);
+            case DESCRIPTION -> {
+                if (fieldValue.length() > 255) throw new InvalidParameterException("The description must be a maximum of 255 characters.");
+                user.setDescription(fieldValue);
+            }
             case NICKNAME -> {
                 validateNickname(fieldValue);
                 user.setNickname(fieldValue);
