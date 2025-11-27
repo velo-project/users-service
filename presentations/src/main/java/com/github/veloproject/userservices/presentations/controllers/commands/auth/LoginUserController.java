@@ -3,6 +3,7 @@ package com.github.veloproject.userservices.presentations.controllers.commands.a
 import com.github.veloproject.userservices.application.commands.auth.login.LoginUserCommand;
 import com.github.veloproject.userservices.application.commands.auth.login.LoginUserCommandResult;
 import com.github.veloproject.userservices.application.mediators.implementations.LoggingMediatorImp;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +20,8 @@ public class LoginUserController {
     }
 
     @PostMapping("/v1/login")
-    public ResponseEntity<LoginUserCommandResult> loginUser(@RequestBody LoginUserCommand command) {
+    public ResponseEntity<LoginUserCommandResult> loginUser(
+            @RequestBody @Valid LoginUserCommand command) {
         var response = mediator.send(command);
         return ResponseEntity
                 .status(response.getStatusCode())

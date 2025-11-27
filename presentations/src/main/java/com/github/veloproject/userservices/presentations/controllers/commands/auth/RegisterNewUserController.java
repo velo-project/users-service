@@ -3,6 +3,7 @@ package com.github.veloproject.userservices.presentations.controllers.commands.a
 import com.github.veloproject.userservices.application.commands.auth.register_new_user.RegisterNewUserCommand;
 import com.github.veloproject.userservices.application.commands.auth.register_new_user.RegisterNewUserCommandResult;
 import com.github.veloproject.userservices.application.mediators.implementations.LoggingMediatorImp;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +20,9 @@ public class RegisterNewUserController {
     }
 
     @PostMapping("/v1/register")
-    public ResponseEntity<RegisterNewUserCommandResult> registerNewUser(@RequestBody RegisterNewUserCommand command) {
+    public ResponseEntity<RegisterNewUserCommandResult> registerNewUser(
+            @RequestBody @Valid RegisterNewUserCommand command
+    ) {
         var response = mediator.send(command);
         return ResponseEntity
                 .status(response.getStatusCode())

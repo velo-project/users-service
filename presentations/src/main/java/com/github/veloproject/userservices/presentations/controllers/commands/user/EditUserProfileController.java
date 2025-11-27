@@ -3,6 +3,7 @@ package com.github.veloproject.userservices.presentations.controllers.commands.u
 import com.github.veloproject.userservices.application.commands.user.edit_user_profile.EditUserProfileCommand;
 import com.github.veloproject.userservices.application.commands.user.edit_user_profile.EditUserProfileCommandResult;
 import com.github.veloproject.userservices.application.mediators.implementations.LoggingMediatorImp;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -22,8 +23,9 @@ public class EditUserProfileController {
 
     @PatchMapping("/v1/edit_profile")
     @PreAuthorize("hasAuthority('SCOPE_USER')")
-    public ResponseEntity<EditUserProfileCommandResult> editUserProfile(@RequestBody EditUserProfileCommand command,
-                                                                        JwtAuthenticationToken token) {
+    public ResponseEntity<EditUserProfileCommandResult> editUserProfile(
+            @RequestBody @Valid EditUserProfileCommand command,
+            JwtAuthenticationToken token) {
         var response = mediator.send(command, token);
         return ResponseEntity
                 .status(response.getStatusCode())

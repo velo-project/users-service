@@ -3,6 +3,7 @@ package com.github.veloproject.userservices.presentations.controllers.commands.a
 import com.github.veloproject.userservices.application.commands.auth.login_2fa.LoginUser2FACommand;
 import com.github.veloproject.userservices.application.commands.auth.login_2fa.LoginUser2FACommandResult;
 import com.github.veloproject.userservices.application.mediators.implementations.LoggingMediatorImp;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +20,8 @@ public class LoginUser2FAController {
     }
 
     @PostMapping("/v1/login/2fa")
-    public ResponseEntity<LoginUser2FACommandResult> loginUser2FA(@RequestBody LoginUser2FACommand command) {
+    public ResponseEntity<LoginUser2FACommandResult> loginUser2FA(
+            @RequestBody @Valid LoginUser2FACommand command) {
         var response = mediator.send(command);
         return ResponseEntity
                 .status(response.getStatusCode())

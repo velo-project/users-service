@@ -3,6 +3,9 @@ package com.github.veloproject.userservices.presentations.controllers.commands.a
 import com.github.veloproject.userservices.application.commands.admin.unblock_user.UnblockUserCommand;
 import com.github.veloproject.userservices.application.commands.admin.unblock_user.UnblockUserCommandResult;
 import com.github.veloproject.userservices.application.mediators.implementations.LoggingMediatorImp;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -22,8 +25,12 @@ public class UnblockUserController {
 
     @PatchMapping("/v1/unblock")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-    public ResponseEntity<UnblockUserCommandResult> unblockUser(@RequestParam String nickname,
-                                                                JwtAuthenticationToken token) {
+    public ResponseEntity<UnblockUserCommandResult> unblockUser(
+            @RequestParam @Valid
+            @NotBlank
+            @Size(max = 20)
+            String nickname,
+            JwtAuthenticationToken token) {
         var command = new UnblockUserCommand(nickname);
         var response = mediator.send(command, token);
         return ResponseEntity
