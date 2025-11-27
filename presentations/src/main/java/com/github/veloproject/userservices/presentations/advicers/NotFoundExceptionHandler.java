@@ -1,16 +1,15 @@
 package com.github.veloproject.userservices.presentations.advicers;
 
 import com.github.veloproject.userservices.application.mediators.contracts.Response;
+import com.github.veloproject.userservices.domain.exceptions.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.security.InvalidParameterException;
-
 @RestControllerAdvice
 public class NotFoundExceptionHandler {
-    @ExceptionHandler(InvalidParameterException.class)
-    public ResponseEntity<Response> handleException(InvalidParameterException e) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Response> handleException(NotFoundException e) {
         int responseStatus = 404;
         return ResponseEntity
                 .status(responseStatus)
