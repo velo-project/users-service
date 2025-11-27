@@ -23,8 +23,6 @@ public class UnblockUserCommandHandler
     @Override
     @Transactional
     public UnblockUserCommandResult handle(UnblockUserCommand request, JwtAuthenticationToken token) {
-        if (request.getNickname() == null) throw new InvalidParameterException("Nickname must be specified.");
-
         var user = repository
                 .findByNickname(request.getNickname())
                 .orElseThrow(IncorrectInformationsProvidedException::new);

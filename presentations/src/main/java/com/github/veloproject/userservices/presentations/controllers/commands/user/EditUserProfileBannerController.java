@@ -3,6 +3,8 @@ package com.github.veloproject.userservices.presentations.controllers.commands.u
 import com.github.veloproject.userservices.application.commands.user.edit_user_profile_banner.EditUserProfileBannerCommand;
 import com.github.veloproject.userservices.application.commands.user.edit_user_profile_banner.EditUserProfileBannerCommandResult;
 import com.github.veloproject.userservices.application.mediators.implementations.LoggingMediatorImp;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -23,8 +25,9 @@ public class EditUserProfileBannerController {
 
     @PatchMapping("/v1/edit_banner")
     @PreAuthorize("hasAuthority('SCOPE_USER')")
-    public ResponseEntity<EditUserProfileBannerCommandResult> editUserProfileBanner(@RequestParam("image") MultipartFile image,
-                                                                                    JwtAuthenticationToken token) {
+    public ResponseEntity<EditUserProfileBannerCommandResult> editUserProfileBanner(
+            @RequestParam("image") @Valid @NotNull MultipartFile image,
+            JwtAuthenticationToken token) {
         var command = new EditUserProfileBannerCommand(image);
         var response = mediator.send(command, token);
         return ResponseEntity

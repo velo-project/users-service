@@ -3,6 +3,8 @@ package com.github.veloproject.userservices.presentations.controllers.queries;
 import com.github.veloproject.userservices.application.mediators.implementations.LoggingMediatorImp;
 import com.github.veloproject.userservices.application.queries.search_user_by_id.SearchUserByIdQuery;
 import com.github.veloproject.userservices.application.queries.search_user_by_id.SearchUserByIdQueryResult;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +22,7 @@ public class SearchUserByIdController {
 
     @GetMapping("/v2/search")
     public ResponseEntity<SearchUserByIdQueryResult> searchUserById(
-            @RequestParam Integer id
+            @RequestParam @Valid @NotNull Integer id
     ) {
         var query = new SearchUserByIdQuery(id);
         var response = mediator.send(query);

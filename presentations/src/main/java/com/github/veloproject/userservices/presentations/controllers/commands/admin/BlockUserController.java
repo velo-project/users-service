@@ -3,6 +3,9 @@ package com.github.veloproject.userservices.presentations.controllers.commands.a
 import com.github.veloproject.userservices.application.commands.admin.block_user.BlockUserCommand;
 import com.github.veloproject.userservices.application.commands.admin.block_user.BlockUserCommandResult;
 import com.github.veloproject.userservices.application.mediators.implementations.LoggingMediatorImp;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -22,8 +25,12 @@ public class BlockUserController {
 
     @PatchMapping("/v1/block")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-    public ResponseEntity<BlockUserCommandResult> blockUser(@RequestParam String nickname,
-                                                            JwtAuthenticationToken token) {
+    public ResponseEntity<BlockUserCommandResult> blockUser(
+            @RequestParam @Valid
+            @NotBlank
+            @Size(max = 20)
+            String nickname,
+            JwtAuthenticationToken token) {
         var command = new BlockUserCommand(nickname);
         var response = mediator.send(command, token);
         return ResponseEntity

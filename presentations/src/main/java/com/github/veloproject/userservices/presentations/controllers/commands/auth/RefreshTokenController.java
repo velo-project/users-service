@@ -3,6 +3,7 @@ package com.github.veloproject.userservices.presentations.controllers.commands.a
 import com.github.veloproject.userservices.application.commands.auth.refresh_token.RefreshTokenCommand;
 import com.github.veloproject.userservices.application.commands.auth.refresh_token.RefreshTokenCommandResult;
 import com.github.veloproject.userservices.application.mediators.implementations.LoggingMediatorImp;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +21,7 @@ public class RefreshTokenController {
 
     @PostMapping("/v1/refresh")
     public ResponseEntity<RefreshTokenCommandResult> refreshToken(
-            @RequestBody RefreshTokenCommand command
+            @RequestBody @Valid RefreshTokenCommand command
     ) {
         var response = mediator.send(command);
         return ResponseEntity

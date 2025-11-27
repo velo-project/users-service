@@ -3,6 +3,9 @@ package com.github.veloproject.userservices.presentations.controllers.commands.a
 import com.github.veloproject.userservices.application.commands.admin.delete_user.DeleteUserCommand;
 import com.github.veloproject.userservices.application.commands.admin.delete_user.DeleteUserCommandResult;
 import com.github.veloproject.userservices.application.mediators.implementations.LoggingMediatorImp;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -22,8 +25,13 @@ public class DeleteUserController {
 
     @DeleteMapping("/v1/delete")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-    public ResponseEntity<DeleteUserCommandResult> deleteUser(@RequestParam String nickname,
-                                                              JwtAuthenticationToken token) {
+    public ResponseEntity<DeleteUserCommandResult> deleteUser(
+            @RequestParam @Valid
+            @NotBlank
+            @Size(max = 20)
+            String nickname,
+            JwtAuthenticationToken token
+    ) {
         var command = new DeleteUserCommand(nickname);
         var response = mediator.send(command, token);
         return ResponseEntity

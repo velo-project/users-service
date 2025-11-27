@@ -39,10 +39,6 @@ public class RefreshTokenCommandHandler extends NoAuthRequestHandler<RefreshToke
 
     @Override
     public RefreshTokenCommandResult handle(RefreshTokenCommand request) {
-        if (request.refreshToken() == null || request.refreshToken().isEmpty()) {
-            throw new InvalidParameterException("Refresh Token is null or empty.");
-        }
-
         try {
             SignedJWT signedJWT = SignedJWT.parse(request.refreshToken());
 

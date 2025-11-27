@@ -29,8 +29,7 @@ public class EditUserProfilePhotoCommandHandler
     @Transactional
     public EditUserProfilePhotoCommandResult handle(EditUserProfilePhotoCommand request,
                                                     JwtAuthenticationToken token) {
-        if (request.getFile() == null || request.getFile().isEmpty()) throw new InvalidParameterException("Image must be uploaded.");
-        else if (token == null) throw new InvalidBearerTokenException("Bearer Token must be specified.");
+        if (request.getFile().isEmpty()) throw new InvalidParameterException("Image must be uploaded.");
 
         var fileName = request.getFile()
                 .getOriginalFilename();
