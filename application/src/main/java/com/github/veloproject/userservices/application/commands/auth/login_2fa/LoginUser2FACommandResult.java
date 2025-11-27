@@ -9,10 +9,14 @@ import lombok.Setter;
 public class LoginUser2FACommandResult extends Response {
     private String accessToken;
     private Long expiresIn;
+    private String refreshToken;
+    private Long refreshTokenExpiresIn;
 
-    public LoginUser2FACommandResult(Integer statusCode, String message, String accessToken, Long expiresIn) {
+    public LoginUser2FACommandResult(Integer statusCode, String message, String accessToken, Long expiresIn, String refreshToken, Long refreshTokenExpiresIn) {
         super(statusCode, message);
         this.accessToken = accessToken;
         this.expiresIn = expiresIn;
+        this.refreshToken = refreshToken;
+        this.refreshTokenExpiresIn = refreshTokenExpiresIn;
     }
 }

@@ -1,5 +1,6 @@
 package com.github.veloproject.userservices.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.veloproject.userservices.domain.exceptions.NotFoundException;
 import com.github.veloproject.userservices.domain.valueObjects.PasswordValueObject;
 import lombok.AccessLevel;
@@ -15,13 +16,14 @@ import java.util.UUID;
 @Setter
 @Builder
 public class UserEntity {
+    @JsonIgnore
     private Integer id;
     private String name;
     private String email;
     /**
      * @apiNote Por favor, muito cuidado ao tirar a anotação @JsonIgnore deste atributo.
      */
-    // @JsonIgnore
+    @JsonIgnore
     private PasswordValueObject password;
     private String nickname;
     private String bannerPhotoUrl;
@@ -31,6 +33,7 @@ public class UserEntity {
     @Setter(AccessLevel.PRIVATE)
     private Boolean isBlocked;
 
+    @JsonIgnore
     @Setter(AccessLevel.PRIVATE)
     private Boolean isDeleted;
 
