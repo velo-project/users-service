@@ -77,6 +77,8 @@ public class LoginUser2FACommandHandler extends NoAuthRequestHandler<LoginUser2F
                 .issuedAt(now)
                 .claim("scope", scopes)
                 .claim("email", user.getEmail())
+                .claim("nickname", user.getNickname())
+                .claim("name", user.getName())
                 .expiresAt(
                         OffsetDateTime.now()
                         .plusMinutes(expiresIn)
