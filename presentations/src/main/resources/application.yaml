@@ -4,6 +4,12 @@ spring:
 
   application:
     name: UserServices
+
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
   mail:
     host: smtp.gmail.com
     port: 587
@@ -32,12 +38,6 @@ spring:
           x-dead-letter-exchange: dead-letter-exchange
           x-dead-letter-routing-key: dead-letter-routing-key
 
-
-  servlet:
-    multipart:
-      max-file-size: 20MB
-      max-request-size: 20MB
-
   data:
     redis:
       host: ${REDIS_HOST}
@@ -52,6 +52,10 @@ spring:
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
+sentry:
+  dsn: ${SENTRY_DSN}
+  send-default-pii: true
+
 jwt:
   public:
     key: file:${RSA_PUBLIC_KEY}
@@ -63,10 +67,6 @@ gcp:
     file: ${GOOGLE_CLOUD_CREDENTIALS}
   project-id: ${GOOGLE_CLOUD_PROJECT}
   bucket: ${GOOGLE_CLOUD_BUCKET}
-
-app:
-  image:
-    upload-dir: ${IMAGE_FILE_DIR}
 
 springdoc:
   api-docs:

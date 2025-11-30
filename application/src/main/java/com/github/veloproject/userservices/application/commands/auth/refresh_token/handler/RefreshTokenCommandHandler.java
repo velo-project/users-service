@@ -153,7 +153,12 @@ public class RefreshTokenCommandHandler extends NoAuthRequestHandler<RefreshToke
                 .issuedAt(now)
                 .claim("scope", scopes)
                 .claim("email", user.getEmail())
-                .expiresAt(OffsetDateTime.now().plusMinutes(expiresIn).toInstant())
+                .claim("nickname", user.getNickname())
+                .claim("name", user.getName())
+                .expiresAt(
+                        OffsetDateTime.now()
+                                .plusMinutes(expiresIn)
+                                .toInstant())
                 .build();
 
         return tokenEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

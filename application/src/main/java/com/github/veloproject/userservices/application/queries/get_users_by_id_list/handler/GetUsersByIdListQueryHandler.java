@@ -4,7 +4,6 @@ import com.github.veloproject.userservices.application.abstractions.repositories
 import com.github.veloproject.userservices.application.mediators.contracts.handlers.NoAuthRequestHandler;
 import com.github.veloproject.userservices.application.queries.get_users_by_id_list.GetUsersByIdListQuery;
 import com.github.veloproject.userservices.application.queries.get_users_by_id_list.GetUsersByIdListQueryResult;
-import com.github.veloproject.userservices.domain.entities.UserEntity;
 import com.github.veloproject.userservices.domain.exceptions.InvalidParameterException;
 import org.springframework.stereotype.Service;
 
