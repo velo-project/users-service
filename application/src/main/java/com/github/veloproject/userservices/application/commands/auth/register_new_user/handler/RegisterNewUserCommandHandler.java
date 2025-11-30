@@ -9,6 +9,7 @@ import com.github.veloproject.userservices.domain.entities.UserEntity;
 import com.github.veloproject.userservices.domain.enums.TypesOfUser;
 import com.github.veloproject.userservices.domain.exceptions.AlreadyExistsException;
 import com.github.veloproject.userservices.domain.valueObjects.PasswordValueObject;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,6 +23,7 @@ public class RegisterNewUserCommandHandler extends NoAuthRequestHandler<Register
     }
 
     @Override
+    @Transactional
     public RegisterNewUserCommandResult handle(RegisterNewUserCommand command) {
         if (repository.existsByEmail(command.getEmail()))
             throw new AlreadyExistsException("E-mail");
