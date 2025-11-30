@@ -4,7 +4,6 @@ import com.github.veloproject.userservices.application.abstractions.repositories
 import com.github.veloproject.userservices.application.mediators.contracts.handlers.NoAuthRequestHandler;
 import com.github.veloproject.userservices.application.queries.search_user_profile.SearchUserProfileQuery;
 import com.github.veloproject.userservices.application.queries.search_user_profile.SearchUserProfileQueryResult;
-import com.github.veloproject.userservices.domain.exceptions.InvalidParameterException;
 import com.github.veloproject.userservices.domain.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
