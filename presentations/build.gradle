@@ -87,8 +87,8 @@ sourceSets {
 }
 
 sentry {
-    org = "velo-0yb"
-    projectName = "velo-user"
+    org = "velo-93"
+    projectName = "velo-social-media-service"
 }
 
 // TODO: Refactor to Environments value
