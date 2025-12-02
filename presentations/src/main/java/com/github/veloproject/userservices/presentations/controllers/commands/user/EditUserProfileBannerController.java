@@ -5,6 +5,7 @@ import com.github.veloproject.userservices.application.commands.user.edit_user_p
 import com.github.veloproject.userservices.application.mediators.implementations.LoggingMediatorImp;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -23,7 +24,7 @@ public class EditUserProfileBannerController {
         this.mediator = mediator;
     }
 
-    @PatchMapping("/v1/edit_banner")
+    @PatchMapping(value = "/v1/edit_banner", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAuthority('SCOPE_USER')")
     public ResponseEntity<EditUserProfileBannerCommandResult> editUserProfileBanner(
             @RequestParam("image") @Valid @NotNull MultipartFile image,
