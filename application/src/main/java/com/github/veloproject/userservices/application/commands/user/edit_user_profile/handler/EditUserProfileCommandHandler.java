@@ -45,10 +45,20 @@ public class EditUserProfileCommandHandler extends AuthRequestHandler<EditUserPr
                 validateNickname(fieldValue);
                 user.setNickname(fieldValue);
             }
+            case NAME -> {
+                validateName(fieldValue);
+                user.setName(fieldValue);
+            }
             default -> throw new InvalidParameterException("Field '" + field + "' is not supported to update on this method.");
         }
 
         repository.save(user);
+    }
+
+    private void validateName(String name) {
+        if (name.isEmpty()) {
+            throw new InvalidParameterException("Name must be valid.");
+        }
     }
 
     private void validateNickname(String fieldValue) {

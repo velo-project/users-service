@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum UserProfileUpdatableField {
+    NAME,
     NICKNAME,
     DESCRIPTION,
     BANNER,
