@@ -25,7 +25,7 @@ public class EditUserProfilePhotoController {
         this.mediator = mediator;
     }
 
-    @PatchMapping(value = "/v1/edit_photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/v1/edit_photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAuthority('SCOPE_USER')")
     public ResponseEntity<EditUserProfilePhotoCommandResult> editUserProfilePhoto(
             @RequestParam("image") @Valid @NotNull MultipartFile image,
