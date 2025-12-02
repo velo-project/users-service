@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 
 public record RefreshTokenCommand(
         @NotBlank
-        @Size(max = 550)
+        @Size(max = 1000)
         String refreshToken
 ) implements Request<RefreshTokenCommandResult> {
 }

@@ -1,10 +1,8 @@
 package com.github.veloproject.userservices.application.queries.get_token_expiration.handler;
 
-import com.github.veloproject.userservices.application.commands.auth.refresh_token.RefreshTokenCommandResult;
 import com.github.veloproject.userservices.application.mediators.contracts.handlers.NoAuthRequestHandler;
 import com.github.veloproject.userservices.application.queries.get_token_expiration.GetTokenExpirationQuery;
 import com.github.veloproject.userservices.application.queries.get_token_expiration.GetTokenExpirationQueryResult;
-import com.github.veloproject.userservices.domain.exceptions.InvalidParameterException;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.stereotype.Service;

@@ -23,7 +23,7 @@ public class GetTokenExpirationController {
 
     @GetMapping("/v1/get-expiration")
     public ResponseEntity<GetTokenExpirationQueryResult> getTokenExpiration(
-            @RequestParam @Valid @NotBlank @Size(max = 550) String token
+            @RequestParam @Valid @NotBlank @Size(max = 1000) String token
     ) {
         var query = new GetTokenExpirationQuery(token);
         var response = mediator.send(query);
