@@ -3,6 +3,7 @@ package com.github.veloproject.userservices.presentations.grpc;
 import com.github.veloproject.userservices.application.mediators.contracts.Mediator;
 import com.github.veloproject.userservices.application.queries.get_users_by_id_list.GetUsersByIdListQuery;
 import com.github.veloproject.userservices.application.queries.search_user_by_id.SearchUserByIdQuery;
+import com.github.veloproject.userservices.application.queries.search_user_profile.SearchUserProfileQuery;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,6 @@ import java.util.List;
 @GrpcService
 @RequiredArgsConstructor
 public class UserServiceGrpcHandler extends UserServiceGrpc.UserServiceImplBase {
-
     private final Mediator mediator;
 
     @Override
@@ -40,6 +40,44 @@ public class UserServiceGrpcHandler extends UserServiceGrpc.UserServiceImplBase 
 
         responseObserver.onNext(response);
         responseObserver.onCompleted();
+    }
+
+    @Override
+    public void getUserByNickname(GetUserByNicknameRequest request,
+                            StreamObserver<GetUserByNicknameResponse> responseObserver) {
+        String userNickname = request.getNickname();
+        try {
+            var userResponse = mediator.send(new SearchUserProfileQuery(userNickname));
+            var user = userResponse.getUser();
+            if (user == null) {
+                responseObserver.onError(io.grpc.Status.NOT_FOUND
+                        .withDescription("Usuário não encontrado com nickname: " + userNickname)
+                        .asRuntimeException());
+                return;
+            }
+
+            UserEntity userProto = UserEntity.newBuilder()
+                    .setId(user.getId())
+                    .setName(user.getName())
+                    .setNickname(user.getNickname())
+                    .setBannerPhotoUrl(user.getBannerPhotoUrl() != null ? user.getBannerPhotoUrl() : "")
+                    .setProfilePhotoUrl(user.getProfilePhotoUrl() != null ? user.getProfilePhotoUrl() : "")
+                    .setIsBlocked(user.getIsBlocked())
+                    .setIsDeleted(user.getIsDeleted())
+                    .build();
+
+            GetUserByNicknameResponse response = GetUserByNicknameResponse.newBuilder()
+                    .setUser(userProto)
+                    .build();
+
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+
+        } catch (Exception e) {
+            responseObserver.onError(io.grpc.Status.INTERNAL
+                    .withDescription("Erro ao buscar usuário: " + e.getMessage())
+                    .asRuntimeException());
+        }
     }
 
     @Override
