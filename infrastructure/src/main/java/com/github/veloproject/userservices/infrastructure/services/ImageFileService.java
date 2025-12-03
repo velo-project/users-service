@@ -80,6 +80,6 @@ public class ImageFileService implements IImageFileService {
 
         storage.create(blobInfo, compressedByteArray);
 
-        return objectPath;
+        return "https://storage.googleapis.com/" + bucketName + "/" + objectPath;
     }
 }

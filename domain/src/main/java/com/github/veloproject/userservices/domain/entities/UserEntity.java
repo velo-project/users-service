@@ -27,10 +27,7 @@ public class UserEntity {
     private PasswordValueObject password;
     private String nickname;
 
-    @Getter(AccessLevel.NONE)
     private String bannerPhotoUrl;
-
-    @Getter(AccessLevel.NONE)
     private String profilePhotoUrl;
     private String description;
 
@@ -46,9 +43,6 @@ public class UserEntity {
 
     @Setter(AccessLevel.PRIVATE)
     private Set<RoleEntity> roles;
-
-    public String getProfilePhotoUrl() { return "https://storage.googleapis.com/velo-storage-qa/" + profilePhotoUrl; }
-    public String getBannerPhotoUrl() { return "https://storage.googleapis.com/velo-storage-qa/" +  bannerPhotoUrl; }
 
     public void block() { this.isBlocked = true; }
     public void unblock() { this.isBlocked = false; }
