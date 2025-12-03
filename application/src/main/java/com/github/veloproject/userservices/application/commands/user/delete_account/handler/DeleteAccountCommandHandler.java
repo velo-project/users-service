@@ -27,12 +27,12 @@ public class DeleteAccountCommandHandler extends AuthRequestHandler<DeleteAccoun
                     userEntity.delete();
                     userRepository.save(userEntity);
                 },
-                () -> { throw new NotFoundException("User"); }
+                () -> { throw new NotFoundException("Usuário"); }
         );
 
         return new DeleteAccountCommandResult(
                 200,
-                "User deleted."
+                "Usuário deletado."
         );
     }
 }

@@ -31,7 +31,7 @@ public class UnblockUserCommandHandler
 
         return new UnblockUserCommandResult(
                 200,
-                "User unblocked."
+                "Usuário desbloqueado."
         );
     }
 }

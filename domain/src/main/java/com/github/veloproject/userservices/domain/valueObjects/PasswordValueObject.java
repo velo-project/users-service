@@ -26,7 +26,7 @@ public class PasswordValueObject {
 
     private String encode(String rawPassword) {
         if (rawPassword == null || rawPassword.isEmpty())
-            throw new IllegalArgumentException("Password is null");
+            throw new IllegalArgumentException("Senha nula.");
 
         rawPassword = rawPassword.trim();
 
@@ -35,7 +35,7 @@ public class PasswordValueObject {
 
     public Boolean compare(String rawPassword) {
         if (password == null || password.isEmpty())
-            throw new IllegalArgumentException("Password is null");
+            throw new IllegalArgumentException("Senha nula.");
 
         return SecureEncoder.compare(rawPassword, this.password);
     }

@@ -19,13 +19,13 @@ public class SearchUserByIdQueryHandler extends NoAuthRequestHandler<SearchUserB
     public SearchUserByIdQueryResult handle(SearchUserByIdQuery request) {
         var user = repository.findById(request.getUserId());
         if (user.isEmpty())
-            throw new NotFoundException("User");
+            throw new NotFoundException("Usuário");
 
         var userGet = user.get();
 
         return new SearchUserByIdQueryResult(
                 200,
-                "Found.",
+                "Encontrado.",
                 SearchUserByIdQueryResult.UserDto.builder()
                         .id(userGet.getId())
                         .name(userGet.getName())

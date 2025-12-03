@@ -20,7 +20,7 @@ public class GetUsersByIdListQueryHandler extends NoAuthRequestHandler<GetUsersB
         if (query.ids().isEmpty()) throw new InvalidParameterException("Parâmetro 'ids' é inválido.");
 
         var userList = userRepository.findAllByIdIn(query.ids());
-        return new GetUsersByIdListQueryResult(200, "Success.", userList);
+        return new GetUsersByIdListQueryResult(200, "Sucesso.", userList);
 
     }
 }

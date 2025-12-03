@@ -13,6 +13,6 @@ public class InternalErrorExceptionHandler {
         int responseStatus = 500;
         return ResponseEntity
                 .status(responseStatus)
-                .body(new Response(responseStatus, "An Internal Error Ocurred."));
+                .body(new Response(responseStatus, "Ocorreu um erro interno."));
     }
 }

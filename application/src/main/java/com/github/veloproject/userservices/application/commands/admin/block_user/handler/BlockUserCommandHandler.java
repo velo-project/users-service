@@ -33,7 +33,7 @@ public class BlockUserCommandHandler
 
         return new BlockUserCommandResult(
                 200,
-                "User blocked."
+                "Usuário bloqueado."
         );
     }
 }

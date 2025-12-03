@@ -30,12 +30,12 @@ public class EditUserProfileBannerCommandHandler
     @Transactional
     public EditUserProfileBannerCommandResult handle(EditUserProfileBannerCommand request,
                                                      JwtAuthenticationToken token) {
-        if (request.getFile().isEmpty()) throw new InvalidParameterException("Image must be uploaded.");
+        if (request.getFile().isEmpty()) throw new InvalidParameterException("Imagem precisa ser postada.");
 
         var fileName = request.getFile()
                 .getOriginalFilename();
         if (fileName == null) {
-            throw new InvalidParameterException("File name must be specified.");
+            throw new InvalidParameterException("O nome do arquivo deve ser especificado.");
         }
 
         var user = repository.getReferenceById(Integer.valueOf(token.getName()));
@@ -47,12 +47,12 @@ public class EditUserProfileBannerCommandHandler
             user.setBannerPhotoUrl(path);
             repository.save(user);
         } catch (IOException e) {
-            throw new InternalErrorException("Error while reading image.");
+            throw new InternalErrorException("Erro ao ler imagem.");
         }
 
         return new EditUserProfileBannerCommandResult(
                 200,
-                "Banner updated."
+                "Banner atualizado."
         );
     }
 }

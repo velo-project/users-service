@@ -40,7 +40,7 @@ public class PasswordRecoveryCommandHandler extends NoAuthRequestHandler<Passwor
 
         var key = sendConfirmationCode(user.getEmail());
 
-        return new PasswordRecoveryCommandResult(200, "Waiting for confirmation.", key);
+        return new PasswordRecoveryCommandResult(200, "Aguardando confirmação.", key);
     }
 
     private String sendConfirmationCode(String email) {

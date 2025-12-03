@@ -47,10 +47,10 @@ public class LoginUser2FACommandHandler extends NoAuthRequestHandler<LoginUser2F
 
         var isDeleted = cache.delete(request.getKey());
         if (!isDeleted)
-            throw new InternalErrorException("An internal error has occurred.");
+            throw new InternalErrorException("Ocorreu um erro interno.");
 
         var user = repository.findByEmail(codeObject.getEmail())
-                .orElseThrow(() -> new NotFoundException("User"));
+                .orElseThrow(() -> new NotFoundException("Usuário"));
 
         /* 0,5 HORA -- AJUSTE CONFORME NECESSÁRIO */
         var expiresIn = 30L;
@@ -58,7 +58,7 @@ public class LoginUser2FACommandHandler extends NoAuthRequestHandler<LoginUser2F
 
         return new LoginUser2FACommandResult(
                 200,
-                "User successfully authenticated",
+                "Usuário autenticado.",
                 token,
                 expiresIn
         );

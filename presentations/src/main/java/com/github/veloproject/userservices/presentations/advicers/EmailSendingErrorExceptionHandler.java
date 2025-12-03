@@ -14,6 +14,6 @@ public class EmailSendingErrorExceptionHandler {
         int responseStatus = 500;
         return ResponseEntity
                 .status(responseStatus)
-                .body(new Response(responseStatus, "An error has occurred while sending the email."));
+                .body(new Response(responseStatus, "Um erro ocorreu ao enviar o e-mail."));
     }
 }

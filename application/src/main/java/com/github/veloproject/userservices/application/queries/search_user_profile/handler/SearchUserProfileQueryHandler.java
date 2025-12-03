@@ -7,7 +7,6 @@ import com.github.veloproject.userservices.application.queries.search_user_profi
 import com.github.veloproject.userservices.domain.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
-// TODO Criar DTO Seguro de Usuário.
 @Service
 public class SearchUserProfileQueryHandler extends NoAuthRequestHandler<SearchUserProfileQuery, SearchUserProfileQueryResult> {
     private final IUserRepository repository;
@@ -23,7 +22,7 @@ public class SearchUserProfileQueryHandler extends NoAuthRequestHandler<SearchUs
 
         return new SearchUserProfileQueryResult(
                 200,
-                "User has been found.",
+                "Usuário encontrado.",
                 user
         );
     }

@@ -40,17 +40,17 @@ public class PasswordRecoveryConfirmationCommandHandler extends NoAuthRequestHan
 
         var isDeleted = cache.delete(request.key());
         if (!isDeleted)
-            throw new InternalErrorException("An internal error has occurred.");
+            throw new InternalErrorException("Ocorreu um erro interno.");
 
         var user = repository.findByEmail(codeObject.getEmail())
-                .orElseThrow(() -> new NotFoundException("User"));
+                .orElseThrow(() -> new NotFoundException("Usuário"));
 
         user.setPassword(new PasswordValueObject(request.newPassword(), true));
         repository.save(user);
 
         return new PasswordRecoveryConfirmationCommandResult(
                 200,
-                "Password redefined."
+                "Senha redefinida."
         );
     }
 }

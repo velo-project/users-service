@@ -45,7 +45,7 @@ public class RefreshTokenCommandHandler extends NoAuthRequestHandler<RefreshToke
             if (!validateTokenSignature(signedJWT)) {
                 return new RefreshTokenCommandResult(
                         400,
-                        "Refresh token has invalid signature.",
+                        "Refresh token com assinatura inválida.",
                         null,
                         0L
                 );
@@ -57,7 +57,7 @@ public class RefreshTokenCommandHandler extends NoAuthRequestHandler<RefreshToke
             if (expirationTime == null) {
                 return new RefreshTokenCommandResult(
                         400,
-                        "Refresh token does not contain expiration time.",
+                        "Refresh token sem expiration time.",
                         null,
                         0L
                 );
@@ -71,7 +71,7 @@ public class RefreshTokenCommandHandler extends NoAuthRequestHandler<RefreshToke
                 if (expiresAt.isBefore(oneHourAgo)) {
                     return new RefreshTokenCommandResult(
                             401,
-                            "Refresh token is expired more than the limit time.",
+                            "Refresh token está expirado por mais tempo do que o permitido.",
                             null,
                             0L
                     );
@@ -84,14 +84,14 @@ public class RefreshTokenCommandHandler extends NoAuthRequestHandler<RefreshToke
             if (userId == null || userId.isEmpty()) {
                 return new RefreshTokenCommandResult(
                         400,
-                        "Refresh token does not contain a valid subject.",
+                        "Refresh token não tem um subject válido.",
                         null,
                         0L
                 );
             }
 
             var user = repository.findById(Integer.valueOf(userId))
-                    .orElseThrow(() -> new RuntimeException("User not found."));
+                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
 
             /* 24 HORAS -- AJUSTE CONFORME NECESSÁRIO */
             var expiresIn = 60L * 24L;
@@ -99,28 +99,28 @@ public class RefreshTokenCommandHandler extends NoAuthRequestHandler<RefreshToke
 
             return new RefreshTokenCommandResult(
                     200,
-                    "Token renovated.",
+                    "Token renovado.",
                     newAccessToken,
                     expiresIn
             );
         } catch (ParseException e) {
             return new RefreshTokenCommandResult(
                     400,
-                    "Refresh token is invalid or malformed.",
+                    "Refresh token é inválido ou está malformado.",
                     null,
                     0L
             );
         } catch (NumberFormatException e) {
             return new RefreshTokenCommandResult(
                     400,
-                    "Invalid user ID format in token.",
+                    "Formato de User ID inválido no token.",
                     null,
                     0L
             );
         } catch (Exception e) {
             return new RefreshTokenCommandResult(
                     500,
-                    "Error while processing token.",
+                    "Erro ao processar token.",
                     null,
                     0L
             );

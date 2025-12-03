@@ -47,7 +47,7 @@ public class RegisterNewUserCommandHandler extends NoAuthRequestHandler<Register
 
         return new RegisterNewUserCommandResult(
                 200,
-                "Successfully registered.",
+                "Registrado com sucesso.",
                 userId);
     }
 }

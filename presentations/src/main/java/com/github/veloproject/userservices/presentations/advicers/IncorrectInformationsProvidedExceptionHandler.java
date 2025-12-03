@@ -13,6 +13,6 @@ public class IncorrectInformationsProvidedExceptionHandler {
         int responseStatus = 400;
         return ResponseEntity
                 .status(responseStatus)
-                .body(new Response(responseStatus, "Incorrect informations provided."));
+                .body(new Response(responseStatus, "Informações incorretas foram fornecidas."));
     }
 }

@@ -32,7 +32,7 @@ public class DeleteUserCommandHandler
 
         return new DeleteUserCommandResult(
                 200,
-                "User deleted."
+                "Usuário deletado."
         );
     }
 }

@@ -26,19 +26,19 @@ public class EditUserProfileCommandHandler extends AuthRequestHandler<EditUserPr
     public EditUserProfileCommandResult handle(EditUserProfileCommand request,
                                                JwtAuthenticationToken token) {
         var user = repository.findById(Integer.valueOf(token.getName()))
-                .orElseThrow(() -> new NotFoundException("User"));
+                .orElseThrow(() -> new NotFoundException("Usuário"));
         updateField(request.getField(), request.getFieldValue(), user);
 
         return new EditUserProfileCommandResult(
                 200,
-                "Field '" + request.getField() + "' successfully updated."
+                "Campo '" + request.getField() + "' atualizado com sucesso."
         );
     }
 
     private void updateField(UserProfileUpdatableField field, String fieldValue, UserEntity user) {
         switch (field) {
             case DESCRIPTION -> {
-                if (fieldValue.length() > 255) throw new InvalidParameterException("The description must be a maximum of 255 characters.");
+                if (fieldValue.length() > 255) throw new InvalidParameterException("A descrição deve ter no máximo 255 caracteres.");
                 user.setDescription(fieldValue);
             }
             case NICKNAME -> {
@@ -49,7 +49,7 @@ public class EditUserProfileCommandHandler extends AuthRequestHandler<EditUserPr
                 validateName(fieldValue);
                 user.setName(fieldValue);
             }
-            default -> throw new InvalidParameterException("Field '" + field + "' is not supported to update on this method.");
+            default -> throw new InvalidParameterException("Campo '" + field + "' não suportado para este método.");
         }
 
         repository.save(user);
@@ -57,13 +57,13 @@ public class EditUserProfileCommandHandler extends AuthRequestHandler<EditUserPr
 
     private void validateName(String name) {
         if (name.isEmpty()) {
-            throw new InvalidParameterException("Name must be valid.");
+            throw new InvalidParameterException("Nome precisa ser válido.");
         }
     }
 
     private void validateNickname(String fieldValue) {
         String regex = "^[a-zA-Z0-9._]{2,20}$";
-        if (repository.existsByNickname(fieldValue)) throw new AlreadyExistsException("Nickname already registered.");
-        else if (!fieldValue.matches(regex)) throw new InvalidParameterException("Nickname must be valid.");
+        if (repository.existsByNickname(fieldValue)) throw new AlreadyExistsException("Nickname já está registrado.");
+        else if (!fieldValue.matches(regex)) throw new InvalidParameterException("Nickname precisa ser válido.");
     }
 }

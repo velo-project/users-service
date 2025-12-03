@@ -42,7 +42,7 @@ public class LoginUserCommandHandler extends NoAuthRequestHandler<LoginUserComma
 
         var key = send2FACode(user.getEmail());
 
-        return new LoginUserCommandResult(200, "Waiting for confirmation.", key);
+        return new LoginUserCommandResult(200, "Aguardando confirmação.", key);
     }
 
     private String send2FACode(String email) {
