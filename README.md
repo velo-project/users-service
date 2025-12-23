@@ -47,6 +47,7 @@ These instructions will provide you with a copy of the project running on your l
    ```
 2. Edit the `.env` file with your settings. The environment variables are:
 
+   - `SERVER_PORT`: Application HTTP port.
    - `POSTGRES_DB`: Database name.
    - `POSTGRES_HOST`: Database host.
    - `POSTGRES_USER`: Database user.
@@ -64,6 +65,8 @@ These instructions will provide you with a copy of the project running on your l
    - `GOOGLE_CLOUD_PROJECT`: Google Cloud project name.
    - `GOOGLE_CLOUD_CREDENTIALS`: Path to Google Cloud service account credentials.
    - `GOOGLE_CLOUD_BUCKET`: Google Cloud Storage bucket name.
+   - `SENTRY_DSN`: Sentry DSN for error tracking.
+   - `SENTRY_AUTH_TOKEN`: Authentication token for Sentry.
    - `RSA_PRIVATE_KEY`: Path to your RSA private key.
    - `RSA_PUBLIC_KEY`: Path to your RSA public key.
 
